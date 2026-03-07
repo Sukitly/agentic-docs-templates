@@ -25,6 +25,7 @@
 ### Product Knowledge
 
 - **[docs/product-specs/knowledge-base.md](docs/product-specs/knowledge-base.md)** — Core feature descriptions, key file paths, data model
+- **[docs/product-specs/glossary.md](docs/product-specs/glossary.md)** — Canonical terms and definitions used across the project
 - **[docs/product-specs/product-roadmap.md](docs/product-specs/product-roadmap.md)** — Product roadmap
 
 ### Design Documents
