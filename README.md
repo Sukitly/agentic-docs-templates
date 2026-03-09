@@ -78,6 +78,26 @@ Task received
   → Done ✅
 ```
 
+## Documentation Integrity Check
+
+A Python script is included to verify documentation health:
+
+```bash
+python3 scripts/check-docs.py
+
+# or via uv
+uv run scripts/check-docs.py
+```
+
+It checks:
+
+1. **Broken links** — all relative markdown links point to existing files
+2. **Index coverage** — `index.md` files list all docs in their directories
+3. **Exec plan structure** — required frontmatter fields and sections are present
+4. **Architecture references** — paths referenced in `ARCHITECTURE.md` exist
+
+No dependencies required — just Python 3.
+
 ## Customization Guide
 
 Search for `<!-- CUSTOMIZE -->` comments across all files to find sections you need to fill in for your project:
