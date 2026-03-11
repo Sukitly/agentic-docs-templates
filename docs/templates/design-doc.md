@@ -19,8 +19,9 @@
 
 ### Postconditions
 
-- **On success**: [How does system state change? What is returned?]
-- **On failure**: [What is the system state? What error type is returned?]
+- **P1**: [On success — system state change. e.g., record written to database]
+- **P2**: [On success — return value. e.g., returns `ApiResult<Entity>`]
+- **P3**: [On failure — system state. e.g., operation rolled back, returns error]
 
 ### Invariants
 
@@ -28,14 +29,14 @@
 
 ## Edge Case Catalog
 
-| Scenario               | Input                                 | Expected Behavior                    |
-| ---------------------- | ------------------------------------- | ------------------------------------ |
-| Empty input            | `null` / `""`                         | Return validation error              |
-| Oversized input        | Exceeds limit                         | Reject with message                  |
-| No permission          | Unauthorized caller                   | Return permission error              |
-| Concurrent operation   | Same resource modified simultaneously | Later writer receives conflict error |
-| Resource not found     | Invalid ID                            | Return not-found error               |
-| _[Add more as needed]_ |                                       |                                      |
+| ID   | Scenario               | Input                                 | Expected Behavior                    |
+| ---- | ---------------------- | ------------------------------------- | ------------------------------------ |
+| B1   | Empty input            | `null` / `""`                         | Return validation error              |
+| B2   | Oversized input        | Exceeds limit                         | Reject with message                  |
+| B3   | No permission          | Unauthorized caller                   | Return permission error              |
+| B4   | Concurrent operation   | Same resource modified simultaneously | Later writer receives conflict error |
+| B5   | Resource not found     | Invalid ID                            | Return not-found error               |
+| _B6_ | _[Add more as needed]_ |                                       |                                      |
 
 ## Error Patterns
 
@@ -58,6 +59,6 @@
 
 [How to determine success? Each criterion should map to a behavioral contract postcondition or edge case above]
 
-1. [ ] [Criterion 1 — maps to which postcondition]
-2. [ ] [Criterion 2 — maps to which edge case scenario]
+1. [ ] [Criterion 1 — maps to P1]
+2. [ ] [Criterion 2 — maps to B1, B2]
 3. [ ] ...
