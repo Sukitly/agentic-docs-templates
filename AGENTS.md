@@ -19,6 +19,8 @@
 ### Architecture & Quality
 
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** — Architecture map: module structure, layering rules, dependency directions, cross-cutting concerns
+- **[docs/STATE.md](docs/STATE.md)** — Application state snapshot: deployment, infrastructure, known limitations (**must-read for new sessions to avoid wrong assumptions**)
+- **[docs/DECISIONS.md](docs/DECISIONS.md)** — Decision log: key decisions and trade-offs from all completed plans (must-read for new sessions)
 - **[docs/QUALITY_SCORE.md](docs/QUALITY_SCORE.md)** — Quality scores: rating and known gaps per module
 - **[docs/TESTING.md](docs/TESTING.md)** — Testing strategy
 
@@ -95,8 +97,7 @@ Test file headers must reference the associated spec source, ensuring every test
 
 ```
 /**
- * @spec docs/design-docs/xxx.md — Behavioral Contract: postcondition #1, #3
- * @spec docs/design-docs/xxx.md — Edge Cases: empty input, oversized input
+ * @spec docs/design-docs/xxx.md — P1, P3, B1, B2
  */
 ```
 
@@ -116,7 +117,7 @@ Test file headers must reference the associated spec source, ensuring every test
 - **Architecture/layering changes** → Update [ARCHITECTURE.md](ARCHITECTURE.md)
 - **New design proposals** → Create new doc in `docs/design-docs/` (use [template](docs/templates/design-doc.md)), update [index.md](docs/design-docs/index.md)
 - **New execution plans** → Create new doc in `docs/exec-plans/active/` (use [template](docs/templates/exec-plan.md)), update [index.md](docs/exec-plans/index.md)
-- **Plan completed** → Move doc from `active/` to `completed/`, update [index.md](docs/exec-plans/index.md)
+- **Plan completed** → Move doc from `active/` to `completed/`, update [index.md](docs/exec-plans/index.md), append decision record to [DECISIONS.md](docs/DECISIONS.md), and update affected entries in [STATE.md](docs/STATE.md)
 - **New tech debt discovered** → Record in [tech-debt.md](docs/exec-plans/tech-debt.md)
 - **Quality score changes** → Update [QUALITY_SCORE.md](docs/QUALITY_SCORE.md)
 
@@ -136,6 +137,19 @@ Test file headers must reference the associated spec source, ensuring every test
 - Implementation steps have explicit ordering dependencies
 
 **No doc needed:** Single-file bug fixes, style tweaks, copy changes, and other localized modifications.
+
+### Self-Rationalization Check (Agent self-check)
+
+> When you catch yourself thinking any of the following, **stop** and follow the process.
+
+| If you're thinking...                                    | The reality is...                                                                      |
+| -------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| "This change is simple, no need for the full process"    | Simple changes are where assumptions break most easily. The short process runs fast     |
+| "I already know how it works"                            | You know how you *think* it works. Verify with evidence                                |
+| "TDD is too heavy for this fix"                          | Simple code breaks too. A test takes only 30 seconds                                   |
+| "I'll add docs later"                                    | Later never comes. Write them now                                                      |
+| "This time is different"                                 | Every time is different, but the process always applies                                 |
+| "Let me code first to confirm it works, then add tests"  | Tests first = "what should happen"; tests after = "what happened". Fundamentally different |
 
 ### Pre-delivery Self-review (Mandatory)
 
