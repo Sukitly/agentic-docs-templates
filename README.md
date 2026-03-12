@@ -27,8 +27,11 @@ Already have a project and want to adopt this documentation framework? Use the b
 ```bash
 # Claude Code
 claude "Read https://raw.githubusercontent.com/Sukitly/agentic-docs-templates/main/bootstrap.md and follow the instructions to set up agentic docs for this project."
+```
 
-# Or download first
+Or download first:
+
+```bash
 curl -sO https://raw.githubusercontent.com/Sukitly/agentic-docs-templates/main/bootstrap.md
 claude "Read bootstrap.md and follow the instructions to set up agentic docs for this project."
 ```
