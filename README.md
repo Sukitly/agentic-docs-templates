@@ -20,6 +20,28 @@ AI coding agents are powerful but undisciplined by default. They skip context, f
 3. **Customize `ARCHITECTURE.md`** — document your project's structure and layering rules
 4. **Start developing** — the agent will follow the workflow defined in `AGENTS.md`
 
+## Existing Projects
+
+Already have a project and want to adopt this documentation framework? Use the bootstrap prompt — an AI agent will analyze your project and generate all documentation files pre-filled with real content.
+
+```bash
+# Claude Code
+claude "Read https://raw.githubusercontent.com/Sukitly/agentic-docs-templates/main/bootstrap.md and follow the instructions to set up agentic docs for this project."
+
+# Or download first
+curl -sO https://raw.githubusercontent.com/Sukitly/agentic-docs-templates/main/bootstrap.md
+claude "Read bootstrap.md and follow the instructions to set up agentic docs for this project."
+```
+
+The bootstrap prompt works with any AI coding agent. It will:
+
+1. **Analyze** your project — tech stack, architecture, conventions, existing docs
+2. **Confirm** findings with you before generating anything
+3. **Generate** all documentation files with real, project-specific content (not empty templates)
+4. **Verify** documentation integrity automatically
+
+See [`bootstrap.md`](bootstrap.md) for the full prompt.
+
 ## Structure
 
 ```
