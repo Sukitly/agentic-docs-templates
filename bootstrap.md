@@ -135,14 +135,41 @@ git clone --depth 1 https://github.com/Sukitly/agentic-docs-templates.git /tmp/a
 
 After cloning, read every file in the template to understand the exact structure, file names, and content format. The template is the **single source of truth** — your generated files must match its structure exactly.
 
-#### 3.2 Conflict Resolution (BEFORE writing any file)
+#### 3.2 Conflict Resolution & Document Migration
 
-Check if any of these already exist in the project:
+> **Mindset: Be bold, not cautious.** The project is under git version control — every change can be reverted. Your job is to fully migrate the project into our framework structure, not to hedge by keeping duplicate files "just in case". Keeping both old and new versions of the same content is **worse** than migrating, because it creates confusion about which is authoritative.
 
-- **If `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, or similar exists**: Read it carefully. You will merge its project-specific rules into the new `AGENTS.md` (in the appropriate sections: Common Commands, Coding Rules, Git Workflow, etc.). Do NOT discard existing rules.
-- **If `ARCHITECTURE.md` exists**: Read it. Preserve any information that enriches the template version.
-- **If `docs/` directory exists**: Check each file. If a file already has real content (not just placeholders), preserve and merge it into the new structure.
-- **For any other conflicting file**: Ask the user how to handle it before overwriting.
+**Agent instruction files:**
+
+- **If `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, or similar exists**: Read it carefully. Merge its project-specific rules into the new `AGENTS.md` (in the appropriate sections: Common Commands, Coding Rules, Git Workflow, etc.). After merging, **delete the old file** (except `.cursorrules` which serves a different tool).
+
+**Existing documentation — migrate, don't duplicate:**
+
+Scan the entire project for existing documentation (README files in subdirectories, `docs/` folder, wiki-style docs, design docs, ADRs, etc.). For each document found:
+
+1. **Classify it** — determine which template file it maps to:
+   - Architecture/system design docs → merge content into `ARCHITECTURE.md`
+   - Feature specs, PRDs, product docs → merge into `docs/product-specs/knowledge-base.md`
+   - Design docs, RFCs, ADRs, technical proposals → move to `docs/design-docs/` and list in `docs/design-docs/index.md`
+   - API docs, external guides, reference material → move to `docs/references/`
+   - State/status/deployment docs → merge into `docs/STATE.md`
+   - Decision records → merge into `docs/DECISIONS.md`
+   - Testing docs → merge into `docs/TESTING.md`
+   - Roadmap/planning docs → merge into `docs/product-specs/product-roadmap.md`
+
+2. **Migrate the content** — extract valuable information from the old doc and integrate it into the appropriate template file. Don't just copy-paste; restructure to fit the template's format.
+
+3. **Delete the old file** — after migration is complete, remove the original file. Do NOT keep both the old doc and the new one. The template structure is the single source of truth.
+
+4. **If a doc doesn't fit any template category**, move it to `docs/references/` as-is.
+
+**What to delete outright:**
+
+- Outdated documentation that describes a state of the project no longer true (e.g., old setup guides for deprecated tooling)
+- Placeholder or stub docs with no real content
+- Files that are fully superseded by the template structure (e.g., a bare `docs/README.md` that just lists doc links — the template's index files replace this)
+
+**Root README.md** — do NOT modify or delete the project's root `README.md`. It serves a different purpose (GitHub landing page) and is not part of the agent docs framework.
 
 #### 3.3 Generation Rules
 
@@ -159,7 +186,7 @@ For every file from the template:
 
 Process files in this order:
 
-**Directory structure** — Create any missing directories. If a directory already exists, skip it. Only create missing subdirectories. Do not remove existing files.
+**Directory structure** — Create any missing directories. If a directory already exists, skip it. Only create missing subdirectories. Old files that have been migrated into the new structure should already be deleted per Phase 3.2.
 
 ```
 docs/
@@ -218,7 +245,15 @@ Read the existing `.gitignore` first. Append only entries that are not already p
 *~
 ```
 
-#### 3.6 Clean Up
+#### 3.6 Post-migration Cleanup
+
+Review the project for any leftover documentation artifacts:
+
+1. **Duplicate content** — Search for any remaining docs outside the template structure that overlap with generated files. If found, migrate remaining content and delete the old file.
+2. **Empty directories** — If migrating docs left behind empty directories, remove them.
+3. **Stale references** — If the root `README.md` links to docs that were moved or deleted, update those links to point to the new locations.
+
+#### 3.7 Clean Up
 
 ```bash
 rm -rf /tmp/agentic-docs-templates
