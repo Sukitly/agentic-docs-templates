@@ -142,14 +142,14 @@ Test file headers must reference the associated spec source, ensuring every test
 
 > When you catch yourself thinking any of the following, **stop** and follow the process.
 
-| If you're thinking...                                    | The reality is...                                                                      |
-| -------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| "This change is simple, no need for the full process"    | Simple changes are where assumptions break most easily. The short process runs fast     |
-| "I already know how it works"                            | You know how you *think* it works. Verify with evidence                                |
-| "TDD is too heavy for this fix"                          | Simple code breaks too. A test takes only 30 seconds                                   |
-| "I'll add docs later"                                    | Later never comes. Write them now                                                      |
-| "This time is different"                                 | Every time is different, but the process always applies                                 |
-| "Let me code first to confirm it works, then add tests"  | Tests first = "what should happen"; tests after = "what happened". Fundamentally different |
+| If you're thinking...                                   | The reality is...                                                                          |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| "This change is simple, no need for the full process"   | Simple changes are where assumptions break most easily. The short process runs fast        |
+| "I already know how it works"                           | You know how you _think_ it works. Verify with evidence                                    |
+| "TDD is too heavy for this fix"                         | Simple code breaks too. A test takes only 30 seconds                                       |
+| "I'll add docs later"                                   | Later never comes. Write them now                                                          |
+| "This time is different"                                | Every time is different, but the process always applies                                    |
+| "Let me code first to confirm it works, then add tests" | Tests first = "what should happen"; tests after = "what happened". Fundamentally different |
 
 ### Pre-delivery Self-review (Mandatory)
 

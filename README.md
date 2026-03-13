@@ -50,23 +50,29 @@ See [`bootstrap.md`](bootstrap.md) for the full prompt.
 ```
 ├── AGENTS.md                      # Agent instructions (hard rules, workflow, checklists)
 ├── ARCHITECTURE.md                # Architecture map (customize per project)
+├── bootstrap.md                   # Bootstrap prompt for existing projects
 ├── docs/
+│   ├── STATE.md                   # Application state snapshot
+│   ├── DECISIONS.md               # Decision log
 │   ├── QUALITY_SCORE.md           # Module quality ratings
 │   ├── TESTING.md                 # Testing strategy
 │   ├── product-specs/
 │   │   ├── knowledge-base.md      # Feature descriptions, file paths, data model
+│   │   ├── glossary.md            # Canonical terms and definitions
 │   │   └── product-roadmap.md     # Product direction
 │   ├── design-docs/
 │   │   └── index.md               # Design document index
 │   ├── exec-plans/
 │   │   ├── index.md               # Execution plan index
 │   │   ├── active/                # In-progress plans
-│   │   ├── completed/            # Done plans
-│   │   └── tech-debt.md          # Tech debt tracker
+│   │   ├── completed/             # Done plans
+│   │   └── tech-debt.md           # Tech debt tracker
 │   ├── templates/
-│   │   ├── design-doc.md         # Template for design documents
-│   │   └── exec-plan.md          # Template for execution plans
-│   └── references/               # External guides and references
+│   │   ├── design-doc.md          # Template for design documents
+│   │   └── exec-plan.md           # Template for execution plans
+│   └── references/                # External guides and references
+├── scripts/
+│   └── check-docs.py             # Documentation integrity checker
 └── .gitignore
 ```
 
