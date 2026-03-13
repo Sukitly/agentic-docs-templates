@@ -1,28 +1,31 @@
 # Agentic Docs Templates
 
-A **language-agnostic, framework-agnostic** repository template for document-driven AI coding agent development.
+A language-agnostic, framework-agnostic repository template for document-driven AI coding agent development.
 
-This template provides a structured documentation system that guides AI coding agents (Claude, Cursor, Copilot, etc.) to follow disciplined development workflows: read docs first, plan before coding, write tests before implementation, and keep documentation in sync with code.
+AI coding agents are powerful but undisciplined by default. They skip context, forget architecture rules, and produce code that drifts from your design. This template provides a structured documentation system that keeps agents in line: read docs before writing code, plan before executing, write tests before implementation, and keep documentation in sync with code.
 
-## Why?
+## Table of Contents
 
-AI coding agents are powerful but undisciplined by default. They skip context, forget architecture rules, and produce code that drifts from your design. This template solves that by giving the agent:
-
-- **A knowledge map** — so it reads before it writes
-- **Hard rules** — so it plans before it executes
-- **Document templates** — so decisions are captured, not lost in chat
-- **Self-review checklists** — so quality is enforced, not hoped for
+- [Quick Start](#quick-start)
+- [Adopting in Existing Projects](#adopting-in-existing-projects)
+- [Repository Structure](#repository-structure)
+- [Core Concepts](#core-concepts)
+- [Documentation Integrity Check](#documentation-integrity-check)
+- [Customization](#customization)
+- [Compatibility](#compatibility)
+- [Inspiration](#inspiration)
+- [License](#license)
 
 ## Quick Start
 
-1. **Create a new repo** from this template (click "Use this template" on GitHub)
-2. **Customize `AGENTS.md`** — fill in the `<!-- CUSTOMIZE -->` sections with your tech stack, commands, and coding rules
-3. **Customize `ARCHITECTURE.md`** — document your project's structure and layering rules
-4. **Start developing** — the agent will follow the workflow defined in `AGENTS.md`
+1. Click "Use this template" on GitHub to create a new repo
+2. Edit `AGENTS.md` and fill in the `<!-- CUSTOMIZE -->` sections with your tech stack, commands, and coding rules
+3. Edit `ARCHITECTURE.md` to document your project's structure and layering rules
+4. Start developing. The agent will follow the workflow defined in `AGENTS.md`
 
-## Existing Projects
+## Adopting in Existing Projects
 
-Already have a project and want to adopt this documentation framework? Use the bootstrap prompt — an AI agent will analyze your project and generate all documentation files pre-filled with real content.
+If you already have a project and want to adopt this documentation framework, use the bootstrap prompt. An AI agent will analyze your project and generate all documentation files pre-filled with real content (not empty templates).
 
 ```bash
 # Claude Code
@@ -36,19 +39,14 @@ curl -sO https://raw.githubusercontent.com/Sukitly/agentic-docs-templates/main/b
 claude "Read bootstrap.md and follow the instructions to set up agentic docs for this project."
 ```
 
-The bootstrap prompt works with any AI coding agent. It will:
+The bootstrap prompt works with any AI coding agent. It will analyze your project (tech stack, architecture, conventions, existing docs), confirm findings with you, generate all documentation files with real content, and verify documentation integrity automatically.
 
-1. **Analyze** your project — tech stack, architecture, conventions, existing docs
-2. **Confirm** findings with you before generating anything
-3. **Generate** all documentation files with real, project-specific content (not empty templates)
-4. **Verify** documentation integrity automatically
+See [`bootstrap.md`](bootstrap.md) for details.
 
-See [`bootstrap.md`](bootstrap.md) for the full prompt.
-
-## Structure
+## Repository Structure
 
 ```
-├── AGENTS.md                      # Agent instructions (hard rules, workflow, checklists)
+├── AGENTS.md                      # Agent instructions (rules, workflow, checklists)
 ├── ARCHITECTURE.md                # Architecture map (customize per project)
 ├── bootstrap.md                   # Bootstrap prompt for existing projects
 ├── docs/
@@ -78,28 +76,28 @@ See [`bootstrap.md`](bootstrap.md) for the full prompt.
 
 ## Core Concepts
 
-### Hard Rules
+### The Five Rules
 
-The agent is bound by 5 non-negotiable rules (in `AGENTS.md`):
+The agent is bound by five rules defined in `AGENTS.md`:
 
-1. **Read docs first** — understand context before touching code
-2. **Docs before code** — create Design Doc or Exec Plan when criteria are met
-3. **Plan before execute** — present changes and wait for approval
-4. **Self-review + update docs** — run checklist and keep docs in sync
-5. **Tests first** — TDD for core business logic
+1. **Read docs first.** Understand context before touching code.
+2. **Docs before code.** Create a Design Doc or Exec Plan when the criteria are met.
+3. **Plan before execute.** Present the planned changes and wait for approval.
+4. **Self-review and update docs.** Run the checklist and keep docs in sync after every change.
+5. **Tests first.** Use TDD for core business logic.
 
 ### Document Types
 
-| Type           | When to Create                                                          | Template                       |
-| -------------- | ----------------------------------------------------------------------- | ------------------------------ |
-| **Design Doc** | New module, cross-module refactor, new dependency, 2+ viable approaches | `docs/templates/design-doc.md` |
-| **Exec Plan**  | ≥3 modules affected, DB migrations, ordered dependencies                | `docs/templates/exec-plan.md`  |
+| Type       | When to Create                                                          | Template                       |
+| ---------- | ----------------------------------------------------------------------- | ------------------------------ |
+| Design Doc | New module, cross-module refactor, new dependency, 2+ viable approaches | `docs/templates/design-doc.md` |
+| Exec Plan  | ≥3 modules affected, DB migrations, ordered dependencies                | `docs/templates/exec-plan.md`  |
 
 ### Workflow
 
 ```
 Task received
-  → Read relevant docs (Knowledge Map)
+  → Read relevant docs
   → Create Design Doc / Exec Plan if needed
   → Get user approval
   → Write tests (TDD for core logic)
@@ -111,7 +109,7 @@ Task received
 
 ## Documentation Integrity Check
 
-A Python script is included to verify documentation health:
+The included Python script verifies documentation health:
 
 ```bash
 python3 scripts/check-docs.py
@@ -120,38 +118,28 @@ python3 scripts/check-docs.py
 uv run scripts/check-docs.py
 ```
 
-It checks:
+It checks that all relative Markdown links point to existing files, that `index.md` files cover all docs in their directories, that exec plans have the required frontmatter fields and sections, and that paths referenced in `ARCHITECTURE.md` actually exist.
 
-1. **Broken links** — all relative markdown links point to existing files
-2. **Index coverage** — `index.md` files list all docs in their directories
-3. **Exec plan structure** — required frontmatter fields and sections are present
-4. **Architecture references** — paths referenced in `ARCHITECTURE.md` exist
+No dependencies required. Just Python 3.
 
-No dependencies required — just Python 3.
+## Customization
 
-## Customization Guide
+Search for `<!-- CUSTOMIZE -->` comments across all files to find sections you need to fill in:
 
-Search for `<!-- CUSTOMIZE -->` comments across all files to find sections you need to fill in for your project:
-
-- **`AGENTS.md`** — Commands, tech stack, coding rules, testing rules
-- **`ARCHITECTURE.md`** — Directory structure, layering rules, conventions
-- **`docs/TESTING.md`** — Test categories, directories, commands, coverage goals
-- **`docs/product-specs/knowledge-base.md`** — Features, data model, file paths
+- `AGENTS.md`: commands, tech stack, coding rules, testing rules
+- `ARCHITECTURE.md`: directory structure, layering rules, conventions
+- `docs/TESTING.md`: test categories, directories, commands, coverage goals
+- `docs/product-specs/knowledge-base.md`: features, data model, file paths
 
 ## Compatibility
 
-This template works with any AI coding agent that reads repository files for context:
+`AGENTS.md` is natively supported by most AI coding agents, including **Codex**, **Cursor**, **Gemini CLI**, **pi**, and others.
 
-- **Claude Code** (CLI) — reads `CLAUDE.md` / `AGENTS.md` automatically
-- **Cursor** — reads project rules files
-- **GitHub Copilot** — reads `.github/copilot-instructions.md`
-- **Other agents** — most can be pointed to read `AGENTS.md`
-
-> **Tip**: If your agent uses a different instructions file (e.g., `.cursorrules`), simply copy or symlink the content from `AGENTS.md`.
+> **Note**: **Claude Code** uses `CLAUDE.md` instead — simply rename or symlink from `AGENTS.md`.
 
 ## Inspiration
 
-This template is heavily inspired by OpenAI's [Harness Engineering](https://openai.com/index/harness-engineering/) approach to AI-assisted development, combined with practical lessons learned from real-world projects.
+This template is heavily inspired by OpenAI's [Harness Engineering](https://openai.com/index/harness-engineering/) approach to AI-assisted development, combined with practical lessons from real-world projects.
 
 ## License
 
