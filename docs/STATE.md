@@ -12,27 +12,27 @@
 
 ## Deployment & Runtime
 
-| Item              | Current State |
-| ----------------- | ------------- |
-| **Platform**      | <!-- e.g., Vercel / Fly.io / AWS --> |
-| **Runtime**       | <!-- e.g., Node.js / Bun / Deno --> |
-| **Output mode**   | <!-- e.g., standalone / serverless --> |
-| **Region**        | <!-- e.g., us-east-1 --> |
-| **Domain**        | <!-- e.g., https://example.com --> |
+| Item            | Current State                          |
+| --------------- | -------------------------------------- |
+| **Platform**    | <!-- e.g., Vercel / Fly.io / AWS -->   |
+| **Runtime**     | <!-- e.g., Node.js / Bun / Deno -->    |
+| **Output mode** | <!-- e.g., standalone / serverless --> |
+| **Region**      | <!-- e.g., us-east-1 -->               |
+| **Domain**      | <!-- e.g., https://example.com -->     |
 
 ---
 
 ## Key Infrastructure
 
-| Service          | Provider | Purpose |
-| ---------------- | -------- | ------- |
-| **Database**     |          |         |
-| **Auth**         |          |         |
-| **Storage**      |          |         |
-| **Payments**     |          |         |
-| **Error monitoring** |      |         |
-| **Logging**      |          |         |
-| **Analytics**    |          |         |
+| Service              | Provider | Purpose |
+| -------------------- | -------- | ------- |
+| **Database**         |          |         |
+| **Auth**             |          |         |
+| **Storage**          |          |         |
+| **Payments**         |          |         |
+| **Error monitoring** |          |         |
+| **Logging**          |          |         |
+| **Analytics**        |          |         |
 
 ---
 

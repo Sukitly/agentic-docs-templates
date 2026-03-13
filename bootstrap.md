@@ -114,12 +114,14 @@ At the end, ask the user:
 > I've completed my analysis of your project. Here's what I found: [summary]
 >
 > **Items that need your input** are marked with ❓. Please:
+>
 > 1. Review the confirmed findings — is anything incorrect?
 > 2. Fill in or clarify the ❓ items as much as you can
 > 3. Are there any architectural rules or conventions I didn't pick up from the code?
 > 4. Are there any specific coding rules you want enforced?
 
 **Wait for user confirmation before proceeding to Phase 3.**
+
 - If the user says "LGTM", "looks good", or similar — proceed directly to Phase 3.
 - If the user provides partial corrections — update your analysis accordingly and proceed. No need to re-present the full summary.
 
@@ -201,37 +203,37 @@ docs/
 
 **Template files (copy as-is, no customization needed):**
 
-| Template file | Notes |
-|---------------|-------|
+| Template file                  | Notes                           |
+| ------------------------------ | ------------------------------- |
 | `docs/templates/design-doc.md` | Generic template, copy verbatim |
-| `docs/templates/exec-plan.md` | Generic template, copy verbatim |
+| `docs/templates/exec-plan.md`  | Generic template, copy verbatim |
 
 **Files to customize (replace `<!-- CUSTOMIZE -->` sections with real content):**
 
-| File | What to fill in |
-|------|----------------|
-| `AGENTS.md` | Common Commands, Tech Stack, Coding Rules, Testing rules. **Keep all other sections (Hard Rules, Knowledge Map, Development Workflow, Self-review, etc.) exactly as-is from the template.** If the project has existing agent rules, merge them into the appropriate CUSTOMIZE sections. |
-| `ARCHITECTURE.md` | High-level architecture, directory structure & responsibilities, layering rules, cross-cutting concerns, key conventions |
-| `docs/STATE.md` | Deployment & runtime, key infrastructure, known limitations, feature status. Mark unknowns as "Unknown — user to fill in" |
-| `docs/TESTING.md` | Overview, test categories, directory structure, commands, guidelines, coverage goals. If no tests exist, state that honestly |
-| `docs/QUALITY_SCORE.md` | Module scores with honest ratings based on observed quality |
-| `docs/product-specs/knowledge-base.md` | Features (with key file paths), data model, key file paths table |
-| `docs/product-specs/glossary.md` | Domain terms discovered from the codebase |
-| `docs/product-specs/product-roadmap.md` | Current focus, upcoming, future ideas. If unknown, note that user should fill in |
+| File                                    | What to fill in                                                                                                                                                                                                                                                                          |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AGENTS.md`                             | Common Commands, Tech Stack, Coding Rules, Testing rules. **Keep all other sections (Hard Rules, Knowledge Map, Development Workflow, Self-review, etc.) exactly as-is from the template.** If the project has existing agent rules, merge them into the appropriate CUSTOMIZE sections. |
+| `ARCHITECTURE.md`                       | High-level architecture, directory structure & responsibilities, layering rules, cross-cutting concerns, key conventions                                                                                                                                                                 |
+| `docs/STATE.md`                         | Deployment & runtime, key infrastructure, known limitations, feature status. Mark unknowns as "Unknown — user to fill in"                                                                                                                                                                |
+| `docs/TESTING.md`                       | Overview, test categories, directory structure, commands, guidelines, coverage goals. If no tests exist, state that honestly                                                                                                                                                             |
+| `docs/QUALITY_SCORE.md`                 | Module scores with honest ratings based on observed quality                                                                                                                                                                                                                              |
+| `docs/product-specs/knowledge-base.md`  | Features (with key file paths), data model, key file paths table                                                                                                                                                                                                                         |
+| `docs/product-specs/glossary.md`        | Domain terms discovered from the codebase                                                                                                                                                                                                                                                |
+| `docs/product-specs/product-roadmap.md` | Current focus, upcoming, future ideas. If unknown, note that user should fill in                                                                                                                                                                                                         |
 
 **Files to generate with structure only (no CUSTOMIZE markers, but fill in if you have data):**
 
-| File | Notes |
-|------|-------|
-| `docs/DECISIONS.md` | Copy from template as-is (empty log structure) |
-| `docs/design-docs/index.md` | Copy from template. If the project already has design docs, list them in the table |
-| `docs/exec-plans/index.md` | Copy from template as-is (empty table) |
+| File                           | Notes                                                                                          |
+| ------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `docs/DECISIONS.md`            | Copy from template as-is (empty log structure)                                                 |
+| `docs/design-docs/index.md`    | Copy from template. If the project already has design docs, list them in the table             |
+| `docs/exec-plans/index.md`     | Copy from template as-is (empty table)                                                         |
 | `docs/exec-plans/tech-debt.md` | If you found TODO/FIXME/known issues during analysis, populate the table. Otherwise copy as-is |
 
 **Script:**
 
-| File | Notes |
-|------|-------|
+| File                    | Notes                                                                        |
+| ----------------------- | ---------------------------------------------------------------------------- |
 | `scripts/check-docs.py` | Copy from template verbatim. Requires Python 3.10+, no external dependencies |
 
 #### 3.5 .gitignore Update
@@ -283,9 +285,11 @@ rm -rf /tmp/agentic-docs-templates
 2. **No CUSTOMIZE markers remaining** — Run: `grep -r "CUSTOMIZE" --include="*.md" .` and verify zero results (excluding bootstrap.md if still present).
 
 3. **Documentation integrity check** — Run:
+
    ```bash
    python3 scripts/check-docs.py
    ```
+
    Fix any issues it reports.
 
 4. **Present summary** to the user — list all generated/modified files with a brief note on what each contains. Also list any files that were skipped and why.

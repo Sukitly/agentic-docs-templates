@@ -16,12 +16,15 @@
 ## AS-IS Analysis
 
 ### Current Behavior
+
 - [Describe existing behavior relevant to this plan, with code pointers]
 
 ### Key Files
+
 - `path/to/file.ts`: [Why relevant, current responsibility]
 
 ### Known Unknowns
+
 - [Explicitly list uncertain items to avoid planning based on assumptions]
 
 ## Proposal
