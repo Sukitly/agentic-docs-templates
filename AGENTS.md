@@ -136,6 +136,17 @@ Test file headers must reference the associated spec source, ensuring every test
 - Involves database migrations or irreversible changes
 - Implementation steps have explicit ordering dependencies
 
+**Document Naming Conventions:**
+
+| Document Type | Format                              | Location                      | Example            |
+| ------------- | ----------------------------------- | ----------------------------- | ------------------ |
+| Design Doc    | `D{序号}-{kebab-case-描述}.md`       | `docs/design-docs/`           | `D1-auth-flow.md`  |
+| Exec Plan     | `E{序号}-{kebab-case-描述}.md`       | `docs/exec-plans/active/`     | `E1-db-migration.md` |
+
+- **序号**必须递增，从对应 `index.md` 表格中获取下一个可用编号
+- **描述**使用 kebab-case（小写英文，单词间用 `-` 连接），简短概括主题
+- Exec Plan 完成后，文件从 `active/` 移至 `completed/`，文件名不变
+
 **No doc needed:** Single-file bug fixes, style tweaks, copy changes, and other localized modifications.
 
 ### Self-Rationalization Check (Agent self-check)
