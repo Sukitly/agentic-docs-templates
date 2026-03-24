@@ -111,15 +111,26 @@ Test file headers must reference the associated spec source, ensuring every test
 
 **Before starting a task — read docs first:** Check the "Repository Knowledge Map" above, find and read relevant docs before starting work.
 
-**After completing a task — must update docs:**
+**After completing a task — must update docs (see Doc Sync Matrix below).**
 
-- **Product feature changes** → Update [knowledge-base.md](docs/product-specs/knowledge-base.md) (feature descriptions, key file paths, data model)
-- **Architecture/layering changes** → Update [ARCHITECTURE.md](ARCHITECTURE.md)
-- **New design proposals** → Create new doc in `docs/design-docs/` (use [template](docs/templates/design-doc.md)), update [index.md](docs/design-docs/index.md)
-- **New execution plans** → Create new doc in `docs/exec-plans/active/` (use [template](docs/templates/exec-plan.md)), update [index.md](docs/exec-plans/index.md)
-- **Plan completed** → Move doc from `active/` to `completed/`, update [index.md](docs/exec-plans/index.md), append decision record to [DECISIONS.md](docs/DECISIONS.md), and update affected entries in [STATE.md](docs/STATE.md)
-- **New tech debt discovered** → Record in [tech-debt.md](docs/exec-plans/tech-debt.md)
-- **Quality score changes** → Update [QUALITY_SCORE.md](docs/QUALITY_SCORE.md)
+#### Doc Sync Matrix
+
+> Use this table to determine which docs need updating. When filling the Exec Plan's "Docs Impact" section, reference this matrix.
+
+| Trigger Event | Must check / update |
+|---|---|
+| **Exec Plan completed** | [STATE.md](docs/STATE.md), [DECISIONS.md](docs/DECISIONS.md), [exec-plans/index.md](docs/exec-plans/index.md) (move to `completed/`), [knowledge-base.md](docs/product-specs/knowledge-base.md), [ARCHITECTURE.md](ARCHITECTURE.md) |
+| **Design Doc adopted** | [DECISIONS.md](docs/DECISIONS.md) (record adoption decision), [ARCHITECTURE.md](ARCHITECTURE.md) (if architecture changes) |
+| **Product feature added/changed** | [knowledge-base.md](docs/product-specs/knowledge-base.md), [STATE.md](docs/STATE.md) (Feature Status) |
+| **Architecture/layering changed** | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| **Technical decision made (in conversation, design doc, or plan)** | [DECISIONS.md](docs/DECISIONS.md) — decisions are not limited to plan completion; any meaningful trade-off or choice must be recorded |
+| **New infrastructure/dependency introduced** | [STATE.md](docs/STATE.md), [ARCHITECTURE.md](ARCHITECTURE.md) |
+| **New design proposal** | Create doc in `docs/design-docs/` (use [template](docs/templates/design-doc.md)), update [index.md](docs/design-docs/index.md) |
+| **New execution plan** | Create doc in `docs/exec-plans/active/` (use [template](docs/templates/exec-plan.md)), update [index.md](docs/exec-plans/index.md) |
+| **New tech debt discovered** | [tech-debt.md](docs/exec-plans/tech-debt.md) |
+| **Quality score changes** | [QUALITY_SCORE.md](docs/QUALITY_SCORE.md) |
+
+**Cross-reference rule:** When updating any document, check whether related documents also need syncing. Documents are never updated in isolation.
 
 **Index maintenance:** After adding or moving any doc under `docs/`, you must update the corresponding `index.md` to keep the index consistent with actual files.
 
@@ -190,6 +201,15 @@ After code is written and CI passes, the agent must run the following checklist 
 - [ ] User input validated at the boundary?
 - [ ] Operations verify caller permissions where applicable?
 - [ ] Any sensitive information that could leak to unauthorized contexts?
+
+**Doc Sync Check (show diff or summary of each updated doc as evidence):**
+
+- [ ] Does this change complete an Exec Plan? → Updated STATE.md, DECISIONS.md, index.md, moved plan to `completed/`
+- [ ] Does this change alter architecture or layering? → Updated ARCHITECTURE.md
+- [ ] Does this change add/modify a product feature? → Updated knowledge-base.md, STATE.md (Feature Status)
+- [ ] Were any technical decisions or trade-offs made during this task (in conversation, design, or implementation)? → Recorded in DECISIONS.md
+- [ ] Do the updated documents have cross-references that need syncing? → Verified consistency
+- [ ] **Evidence**: List each doc updated and a one-line summary of the change (do NOT just check boxes)
 
 ### Task Completion Criteria
 
