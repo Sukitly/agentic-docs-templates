@@ -41,6 +41,22 @@
 
 ---
 
+## Decisions Made Without Asking
+
+> ⛔ See [AGENTS.md Hard Rule #10](../../../AGENTS.md). This section lists non-trivial choices the agent made without asking the user during plan creation. The user must review this section before approving the plan. Forbidden to bury decisions in ## Proposal and let the user discover them via diff.
+>
+> If no such decisions exist, write: "None — all non-trivial choices are explicitly discussed in ## Proposal above, or were pre-aligned with the user."
+
+| # | Decision | Alternatives | My choice | Rationale (✅ right abstraction / ⚠️ smallest change) | User confirmation needed? |
+|---|----------|--------------|-----------|----------------------------------------------------|---------------------------|
+| 1 | <!-- e.g., New dedicated service vs extending existing --> | <!-- (a) New EmailService (b) Extend NotificationService with sendEmail --> | <!-- (a) --> | <!-- ✅ Clear responsibility — NotificationService should not own SMTP details --> | <!-- Yes --> |
+
+> Any row with ⚠️ in Rationale **must stop and ask the user** — do not proceed to implementation. A ⚠️ decision = a shortcut taken without user approval, equivalent to minimum-diff thinking (rule #11).
+
+> Distinction from "Decision Log" below: this section lists **planning-stage** silent decisions for user review before approval; Decision Log is the **after-the-fact** record of decisions that arose during execution.
+
+---
+
 ## Docs Impact
 
 > ⛔ **Must fill on plan creation.** Use the [Doc Sync Matrix](../../AGENTS.md#doc-sync-matrix) to identify affected docs.

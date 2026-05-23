@@ -1,12 +1,41 @@
 # AGENTS.md
 
+## Communication Rules
+
+Your reader is a senior engineer with full context on the project. They don't need background, encouragement, or restatements of what they just said.
+
+1. **No repetition.** State each conclusion once. Don't rephrase the same point.
+2. **Skip obvious reasoning.** If evidence directly implies a conclusion, give the conclusion. Don't walk through steps unless the chain is non-obvious.
+3. **Use tables for structured comparison, not prose.** Bad: "A is P0 because X. B is P1 because Y." Good: markdown table with columns Item | Priority | Reason.
+4. **No decorative formatting.** No horizontal rules, no box-drawing characters, no headers on every paragraph. Use headers only when sections genuinely need separation.
+5. **Conclusion first.** Lead with the decision / conclusion / action item, then supporting evidence.
+6. **No meta-narration.** Don't say "if you agree just reply X and I'll start." Don't narrate what you're about to do. Either do it, or propose it.
+7. **Density check.** Ask yourself: "if I cut half of this, would the information content stay the same?" If yes, cut. Replies to a code review should not exceed 30% of the review's own length.
+8. **Anti-quota principle for report-style output.** When asked to produce findings / issues / risks / improvement suggestions / alternatives as lists, report only what you **actually found**. Empty lists are a valid and common output. Specifically forbidden:
+   - Tagging issues with P0/P1/P2, 🔴🟡🟢, or severity buckets — these pressure you to fill each bucket
+   - Picking one of fixed options (a/b/c, yes/no/pending) as a verdict when reality falls outside them
+   - Filler rows like "no issues found in category X" / "this section is empty"
+   - Giving an "overall assessment / summary judgment" when there are no actual findings
+   - Promoting uncertain nits to real issues so the report looks productive
+
+   Underlying distinction: **enumerating internal state** ("what decisions did I make", "what alternatives did I consider") is bounded and required; **filling external categories** ("classify by severity", "list one per category in four failure types") triggers hallucinated bucket-filling and must be refused. When you catch yourself padding, stop and delete the padding.
+
 ## ⛔ Hard Rules (Must follow on every task, no exceptions)
+
+> **Task starting frame.** Your role is not to ship code — it's to find the right abstraction. If the right abstraction requires changing 10 files, change 10 files. If you can only determine the abstraction by asking, ask first. "Ship fast" is not the goal; "produce something that holds up 6 months from now" is. Read this on the first step of every task. Don't rely on the 200 lines of rules below to correct a wrong starting point.
 
 1. **STOP — Do NOT write code directly.** After receiving any development task, the first step is to read the relevant docs from the "Repository Knowledge Map" below to understand existing architecture and context.
 2. **Docs before code.** If a task requires a Design Doc or Exec Plan (see criteria below), you must **create it and get user confirmation first** before writing any code.
 3. **Plan before execute.** Present what files you plan to change, why, and how. **Wait for explicit user approval** before making changes.
 4. **Self-review + update docs after completion.** After code changes, you must run the "Pre-delivery Self-review" checklist and show results, then update all affected docs (see "Development Workflow" section). Skipping either step means the task is incomplete.
 5. **Tests first.** When working on core business logic, you must write tests first, confirm they fail, then write the implementation (see "TDD Discipline" section).
+6. **No "minimal runnable loop" feature development.** For any real feature work, you must directly implement the final end-to-end path that faces the user. Forbidden as delivery strategies: scaffolding first, mock-run-through, placeholder-then-fill, dual-path-transition. Unless the user explicitly requests prototype / spike / placeholder / research, the following are all forbidden: passing off a mock backend as feature-complete, introducing temporary orchestration that will not reach the final architecture, keeping manual and real paths coexisting as a transition, submitting half-baked work justified by "we'll wire up real capability later".
+7. **No "minimum viable / shortest path" solutions.** During solution design, forbidden to cut requirements with "let's just do MVP", "take the shortest path", or "good enough". The proposal must directly target the final form of the goal. When you catch yourself producing "trimmed / simplified / POC version" code, stop and return to the complete proposal. This kind of cutting only produces garbage.
+8. **No mid-flight checks during Exec Plan execution.** During Exec Plan execution, forbidden to do phase-by-phase or step-by-step acceptance, forbidden to run lint / test / typecheck / build as "phase passes" criteria before the entire Plan is done. Mid-flight checks trick the LLM into producing placeholder code, empty implementations, temporary mocks etc. as garbage intermediate states to pass checks. Acceptance happens only once, after all code in the Plan is written, against the "Pre-delivery Self-review" checklist.
+9. **No code written just to pass checks.** Only write code the final product actually needs. Forbidden to add, in order to make lint / test / typecheck pass: placeholder implementations, empty function bodies, `@ts-ignore` / `eslint-disable`, branches that will never be called, try-catch added only to suppress errors, tests written only to bump coverage. If a check failure's root cause is a design problem, go back and fix the design — don't paper over at the code layer.
+10. **No silent decisions.** Any Design Doc / Exec Plan / non-trivial change must contain a `## Decisions Made Without Asking` section listing: (a) decisions I made without asking you; (b) what alternatives existed for each; (c) whether I chose this because "most convenient / smallest change" or "right abstraction". If any rationale is the former, stop and ask, do not proceed. Forbidden to bury decisions in implementation code and let the user discover them via diff. Agents lack calibrated uncertainty (they don't know what they don't know), so you cannot rely on "I'll ask when I feel uncertain"; you must use forced enumeration to make implicit choices explicit.
+11. **No minimum-diff thinking.** Rule #7 bans "MVP" at the feature granularity; this rule extends it to single-file / single-function / single-interface granularity. Before implementing any change, answer: "is this the smallest-diff approach, or the right-abstraction approach?" If they differ, you must choose the latter and explain why the former is wrong. When you catch yourself producing code like "just change two lines and it works", "add a parameter to bypass it", "reuse a semantically-mismatched existing function to avoid creating a new file" — stop immediately. "Small diff = small risk" is an illusion; "small diff = design got bypassed" is the norm.
+12. **Force enumeration of alternatives.** Any non-trivial technical decision (proposal choice in a Design Doc, implementation path in an Exec Plan, single-point choices for data structure / API shape / abstraction level / module boundary etc.) must, before implementation, list at least 2 approaches and write down "why rejected" for the rejected one. Even if one is obviously better, you must write it. The goal is not to produce a comparison conclusion — it is to expose the model's default prior for review. When you don't compare, the model just walks the prior, and the prior is usually minimum-diff.
 
 > Violating any of the above = failure. Better to ask one more question than to skip documentation.
 
@@ -172,6 +201,9 @@ Test file headers must reference the associated spec source, ensuring every test
 | "I'll add docs later"                                   | Later never comes. Write them now                                                          |
 | "This time is different"                                | Every time is different, but the process always applies                                    |
 | "Let me code first to confirm it works, then add tests" | Tests first = "what should happen"; tests after = "what happened". Fundamentally different |
+| "This decision is obvious, no need to list alternatives"            | "Obvious" means your prior is strong, not that the option space is small. Rule #12 requires enumeration precisely so your prior can be reviewed |
+| "Just change these two lines and it'll work, no need to touch other code" | This is minimum-diff thinking (rule #11). Ask "is the abstraction right" first, then "how big is the diff" — order matters |
+| "This choice isn't important, not worth asking"                      | Importance is the user's call, not the agent's. Per rule #10, list it in Decisions Made Without Asking and let the user decide |
 
 ### Pre-delivery Self-review (Mandatory)
 
@@ -225,3 +257,9 @@ A development task is considered "complete" only when ALL of the following are m
 
 - **Never commit directly to the main branch** — verify current branch with `git branch` before committing
 - Merge via feature branch + PR. Naming: `feat/xxx`, `fix/xxx`, `refactor/xxx`, `test/xxx`
+- **Never run `git checkout -- .`, `git checkout <branch> -- .`, or `git restore .` with uncommitted changes in the working tree** — these irreversibly drop working-tree changes. To verify an older code state, use `git worktree` or a new branch — do not touch the current working tree.
+- **Prefix any git command that opens an editor with `GIT_EDITOR=true`** (non-interactive environments hang the command otherwise, causing timeouts / aborted runs). Common cases:
+  - `git rebase --continue` / `git rebase -i` → `GIT_EDITOR=true git rebase --continue`
+  - `git commit --amend` (without `-m`) → add `-m "..."` or `--no-edit`
+  - `git merge` (with merge commit and no `-m`) → add `--no-edit` or `-m "..."`
+  - `git tag -a` / `git revert` (without `-m`) → add `-m "..."`

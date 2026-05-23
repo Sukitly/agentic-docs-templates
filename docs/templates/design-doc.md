@@ -55,6 +55,18 @@
 
 [Approaches considered but not adopted, and reasons for rejection]
 
+## Decisions Made Without Asking
+
+> ⛔ See [AGENTS.md Hard Rule #10](../../AGENTS.md). This section lists non-trivial choices the agent made without asking the user, for user review before adopting this doc. Forbidden to bury decisions in the "Proposal" prose and let the user discover them via diff.
+>
+> If no such decisions exist, write: "None — all non-trivial choices are explicitly discussed in ## Proposal / ## Alternatives Considered above, or were pre-aligned with the user."
+
+| # | Decision | Alternatives | My choice | Rationale (✅ right abstraction / ⚠️ smallest change) | User confirmation needed? |
+|---|----------|--------------|-----------|----------------------------------------------------|---------------------------|
+| 1 | <!-- e.g., Chapter draft persistence form --> | <!-- (a) JSONB column (b) New chapter_drafts table --> | <!-- (b) --> | <!-- ✅ Clear schema, supports partial query, index-friendly --> | <!-- Yes --> |
+
+> Any row with ⚠️ in Rationale **must stop and ask the user** — do not proceed to implementation. A ⚠️ decision = a shortcut taken without user approval, equivalent to minimum-diff thinking (rule #11).
+
 ## Acceptance Criteria
 
 [How to determine success? Each criterion should map to a behavioral contract postcondition or edge case above]
