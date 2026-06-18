@@ -2,40 +2,44 @@
 
 ## Communication Rules
 
-Your reader is a senior engineer with full context on the project. They don't need background, encouragement, or restatements of what they just said.
+Your reader is a senior engineer with full context on the project. They do not need background, encouragement, or restatements of what they just said.
 
-1. **No repetition.** State each conclusion once. Don't rephrase the same point.
-2. **Skip obvious reasoning.** If evidence directly implies a conclusion, give the conclusion. Don't walk through steps unless the chain is non-obvious.
-3. **Use tables for structured comparison, not prose.** Bad: "A is P0 because X. B is P1 because Y." Good: markdown table with columns Item | Priority | Reason.
-4. **No decorative formatting.** No horizontal rules, no box-drawing characters, no headers on every paragraph. Use headers only when sections genuinely need separation.
+1. **No repetition.** State each conclusion once. Do not rephrase the same point.
+2. **Skip obvious reasoning.** If evidence directly implies a conclusion, give the conclusion. Do not walk through steps unless the chain is non-obvious.
+3. **Use tables for structured comparison, not prose.** Bad: "A is high because X. B is medium because Y." Good: a markdown table with columns `Item | Decision | Reason`.
+4. **No decorative formatting.** Do not use horizontal rules, box-drawing characters, or headers on every paragraph. Use headers only when sections genuinely need separation.
 5. **Conclusion first.** Lead with the decision / conclusion / action item, then supporting evidence.
-6. **No meta-narration.** Don't say "if you agree just reply X and I'll start." Don't narrate what you're about to do. Either do it, or propose it.
-7. **Density check.** Ask yourself: "if I cut half of this, would the information content stay the same?" If yes, cut. Replies to a code review should not exceed 30% of the review's own length.
-8. **Anti-quota principle for report-style output.** When asked to produce findings / issues / risks / improvement suggestions / alternatives as lists, report only what you **actually found**. Empty lists are a valid and common output. Specifically forbidden:
-   - Tagging issues with P0/P1/P2, 🔴🟡🟢, or severity buckets — these pressure you to fill each bucket
-   - Picking one of fixed options (a/b/c, yes/no/pending) as a verdict when reality falls outside them
-   - Filler rows like "no issues found in category X" / "this section is empty"
-   - Giving an "overall assessment / summary judgment" when there are no actual findings
-   - Promoting uncertain nits to real issues so the report looks productive
+6. **No meta-narration.** Do not say "if you agree, reply X and I will start." Do not narrate what you are about to do. Either do it, or propose it.
+7. **Density check.** Ask yourself: "if I cut half of this, would the information content stay the same?" If yes, cut.
+8. **Concrete references.** When referring to a module, file, component, variable, plan, or concept, write the concrete name. Avoid vague references like "it", "this", "that one", "the previous one", or temporary labels across messages.
+9. **Anti-quota principle for report-style output.** When asked to produce findings / issues / risks / suggestions / alternatives, report only what you actually found. Empty lists are valid. Specifically forbidden:
+   - Inventing severity buckets or forcing every bucket to contain something
+   - Choosing from fixed options when reality falls outside the options
+   - Filler rows like "no issues found in category X"
+   - Giving an overall judgment when there are no findings
+   - Promoting uncertain nits into issues so the report looks productive
 
-   Underlying distinction: **enumerating internal state** ("what decisions did I make", "what alternatives did I consider") is bounded and required; **filling external categories** ("classify by severity", "list one per category in four failure types") triggers hallucinated bucket-filling and must be refused. When you catch yourself padding, stop and delete the padding.
+   Distinction: enumerating internal state ("what decisions did I make") is bounded and required; filling external categories ("list one issue in each failure mode") encourages hallucinated bucket-filling.
+
+## UI/UX Rules
+
+- Express information through UI structure, hierarchy, state, affordance, disabled/loading/selected/empty states, and direct manipulation. Do not compensate for an unclear interaction model with explanatory copy. Copy is for labels, errors, confirmations, and necessary accessibility support.
 
 ## ⛔ Hard Rules (Must follow on every task, no exceptions)
 
-> **Task starting frame.** Your role is not to ship code — it's to find the right abstraction. If the right abstraction requires changing 10 files, change 10 files. If you can only determine the abstraction by asking, ask first. "Ship fast" is not the goal; "produce something that holds up 6 months from now" is. Read this on the first step of every task. Don't rely on the 200 lines of rules below to correct a wrong starting point.
+> **Task starting frame.** Your role is not to ship code — it is to find the right abstraction. If the right abstraction requires changing 10 files, change 10 files. If you can only determine the abstraction by asking, ask first. "Ship fast" is not the goal; "produce something that holds up 6 months from now" is.
 
-1. **STOP — Do NOT write code directly.** After receiving any development task, the first step is to read the relevant docs from the "Repository Knowledge Map" below to understand existing architecture and context.
-2. **Docs before code.** If a task requires a Design Doc or Exec Plan (see criteria below), you must **create it and get user confirmation first** before writing any code.
-3. **Plan before execute.** Present what files you plan to change, why, and how. **Wait for explicit user approval** before making changes.
-4. **Self-review + update docs after completion.** After code changes, you must run the "Pre-delivery Self-review" checklist and show results, then update all affected docs (see "Development Workflow" section). Skipping either step means the task is incomplete.
-5. **Tests first.** When working on core business logic, you must write tests first, confirm they fail, then write the implementation (see "TDD Discipline" section).
-6. **No "minimal runnable loop" feature development.** For any real feature work, you must directly implement the final end-to-end path that faces the user. Forbidden as delivery strategies: scaffolding first, mock-run-through, placeholder-then-fill, dual-path-transition. Unless the user explicitly requests prototype / spike / placeholder / research, the following are all forbidden: passing off a mock backend as feature-complete, introducing temporary orchestration that will not reach the final architecture, keeping manual and real paths coexisting as a transition, submitting half-baked work justified by "we'll wire up real capability later".
-7. **No "minimum viable / shortest path" solutions.** During solution design, forbidden to cut requirements with "let's just do MVP", "take the shortest path", or "good enough". The proposal must directly target the final form of the goal. When you catch yourself producing "trimmed / simplified / POC version" code, stop and return to the complete proposal. This kind of cutting only produces garbage.
-8. **No mid-flight checks during Exec Plan execution.** During Exec Plan execution, forbidden to do phase-by-phase or step-by-step acceptance, forbidden to run lint / test / typecheck / build as "phase passes" criteria before the entire Plan is done. Mid-flight checks trick the LLM into producing placeholder code, empty implementations, temporary mocks etc. as garbage intermediate states to pass checks. Acceptance happens only once, after all code in the Plan is written, against the "Pre-delivery Self-review" checklist.
-9. **No code written just to pass checks.** Only write code the final product actually needs. Forbidden to add, in order to make lint / test / typecheck pass: placeholder implementations, empty function bodies, `@ts-ignore` / `eslint-disable`, branches that will never be called, try-catch added only to suppress errors, tests written only to bump coverage. If a check failure's root cause is a design problem, go back and fix the design — don't paper over at the code layer.
-10. **No silent decisions.** Any Design Doc / Exec Plan / non-trivial change must contain a `## Decisions Made Without Asking` section listing: (a) decisions I made without asking you; (b) what alternatives existed for each; (c) whether I chose this because "most convenient / smallest change" or "right abstraction". If any rationale is the former, stop and ask, do not proceed. Forbidden to bury decisions in implementation code and let the user discover them via diff. Agents lack calibrated uncertainty (they don't know what they don't know), so you cannot rely on "I'll ask when I feel uncertain"; you must use forced enumeration to make implicit choices explicit.
-11. **No minimum-diff thinking.** Rule #7 bans "MVP" at the feature granularity; this rule extends it to single-file / single-function / single-interface granularity. Before implementing any change, answer: "is this the smallest-diff approach, or the right-abstraction approach?" If they differ, you must choose the latter and explain why the former is wrong. When you catch yourself producing code like "just change two lines and it works", "add a parameter to bypass it", "reuse a semantically-mismatched existing function to avoid creating a new file" — stop immediately. "Small diff = small risk" is an illusion; "small diff = design got bypassed" is the norm.
-12. **Force enumeration of alternatives.** Any non-trivial technical decision (proposal choice in a Design Doc, implementation path in an Exec Plan, single-point choices for data structure / API shape / abstraction level / module boundary etc.) must, before implementation, list at least 2 approaches and write down "why rejected" for the rejected one. Even if one is obviously better, you must write it. The goal is not to produce a comparison conclusion — it is to expose the model's default prior for review. When you don't compare, the model just walks the prior, and the prior is usually minimum-diff.
+1. **STOP — do not write code directly.** After receiving any development task, first read the relevant docs from the Repository Knowledge Map below.
+2. **Docs before code when criteria are met.** If the task requires a Design Doc or Exec Plan, create the doc and get user confirmation before coding.
+3. **Plan before execute.** Present what files you plan to change, why, and how. Wait for explicit user approval before making changes.
+4. **Self-review + doc sync after completion.** After code changes, run the Pre-delivery Self-review checklist, then update affected docs. Skipping either step means the task is incomplete.
+5. **Tests first.** When working on core business logic, write tests first, confirm they fail, then implement.
+6. **No "minimal runnable loop" feature delivery.** For real feature work, implement the final user-facing path. Do not deliver scaffolding, mock backends, placeholders, or dual-path transition code unless the user explicitly asks for a prototype/spike/placeholder.
+7. **No "minimum viable / shortest path" solutions.** The proposal must target the complete form of the goal. If you catch yourself trimming requirements for convenience, stop and return to the complete proposal.
+8. **No mid-flight checks during Exec Plan execution.** During Exec Plan execution, do not use phase-by-phase lint/test/typecheck/build as acceptance gates. Acceptance happens once after the whole plan is implemented.
+9. **No code written only to pass checks.** Do not add placeholder implementations, empty branches, `@ts-ignore`, `eslint-disable`, generic catch-all wrappers, or coverage-only tests to make checks pass. Fix the design instead.
+10. **No silent decisions.** Any Design Doc, Exec Plan, or non-trivial change proposal must contain a `## Decisions Made Without Asking` section listing: (a) decisions made without asking the user; (b) whether the choice was made because it is the right abstraction or merely the smallest change. If the reason is smallest change / convenience, stop and ask. Enumerate decisions themselves; do not fabricate alternatives just to fill a comparison table.
+11. **No minimum-diff thinking.** Before implementing, answer: "is this the smallest-diff approach, or the right-abstraction approach?" If they differ, choose the right abstraction and explain why the smallest diff is wrong.
 
 > Violating any of the above = failure. Better to ask one more question than to skip documentation.
 
@@ -48,25 +52,25 @@ Your reader is a senior engineer with full context on the project. They don't ne
 ### Architecture & Quality
 
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** — Architecture map: module structure, layering rules, dependency directions, cross-cutting concerns
-- **[docs/STATE.md](docs/STATE.md)** — Application state snapshot: deployment, infrastructure, known limitations (**must-read for new sessions to avoid wrong assumptions**)
-- **[docs/DECISIONS.md](docs/DECISIONS.md)** — Decision log: key decisions and trade-offs from all completed plans (must-read for new sessions)
-- **[docs/QUALITY_SCORE.md](docs/QUALITY_SCORE.md)** — Quality scores: rating and known gaps per module
+- **[docs/STATE.md](docs/STATE.md)** — Current state snapshot by domain (**must-read for new sessions to avoid wrong assumptions**)
+- **[docs/DECISIONS.md](docs/DECISIONS.md)** — Still-binding technical decisions and trade-offs
 - **[docs/TESTING.md](docs/TESTING.md)** — Testing strategy
+- **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** — Deployment targets, runtime config, smoke tests, rollback notes
 
 ### Product Knowledge
 
 - **[docs/product-specs/knowledge-base.md](docs/product-specs/knowledge-base.md)** — Core feature descriptions, key file paths, data model
 - **[docs/product-specs/glossary.md](docs/product-specs/glossary.md)** — Canonical terms and definitions used across the project
-- **[docs/product-specs/product-roadmap.md](docs/product-specs/product-roadmap.md)** — Product roadmap
 
 ### Design Documents
 
 - **[docs/design-docs/index.md](docs/design-docs/index.md)** — Design document index (technical proposals & architecture decisions)
 
-### Execution Plans
+### Execution Plans & Work Tracking
 
-- **[docs/exec-plans/index.md](docs/exec-plans/index.md)** — Execution plan index (active/completed plans, priority overview)
-- **[docs/exec-plans/tech-debt.md](docs/exec-plans/tech-debt.md)** — Centralized tech debt tracking
+- **[docs/exec-plans/index.md](docs/exec-plans/index.md)** — Execution plan index (active/completed plans)
+- **[docs/TECH_DEBT.md](docs/TECH_DEBT.md)** — Technical debt: implementation deviations from the known-correct shape
+- **[docs/BACKLOG.md](docs/BACKLOG.md)** — Product gaps, deferred decisions, and operational/security follow-ups
 
 ### Document Templates
 
@@ -81,7 +85,7 @@ Your reader is a senior engineer with full context on the project. They don't ne
 
 ## Common Commands
 
-<!-- CUSTOMIZE: Fill in your project's common commands -->
+<!-- CUSTOMIZE: Fill in your project's common commands. Omit commands that do not exist. -->
 
 ```bash
 # Development
@@ -97,15 +101,15 @@ Your reader is a senior engineer with full context on the project. They don't ne
 
 ## Tech Stack
 
-<!-- CUSTOMIZE: Describe your tech stack here -->
+<!-- CUSTOMIZE: Describe your tech stack here. -->
 
 ## Coding Rules
 
-<!-- CUSTOMIZE: Define your project-specific coding rules here -->
+<!-- CUSTOMIZE: Define project-specific coding rules here. -->
 
 ## Testing
 
-<!-- CUSTOMIZE: Define your project-specific testing rules and conventions here -->
+<!-- CUSTOMIZE: Define project-specific testing rules and conventions here. -->
 
 Detailed testing strategy: [docs/TESTING.md](docs/TESTING.md)
 
@@ -113,153 +117,152 @@ Detailed testing strategy: [docs/TESTING.md](docs/TESTING.md)
 
 For any task involving core business logic, follow Red → Green → Refactor:
 
-1. **Write tests first**: Generate test cases based on the Design Doc's behavioral contract and edge case catalog
-2. **Confirm red**: Run tests, confirm all fail. If any test passes unexpectedly, the test is wrong — fix the test first
-3. **Minimal implementation**: Write the minimum code to make tests pass one by one
-4. **Refactor**: Once all tests pass, refactor with the test suite as your safety net
+1. **Write tests first** based on the Design Doc / Exec Plan / approved conversation plan behavioral contract
+2. **Confirm red**: run tests and confirm they fail for the intended reason
+3. **Implement** the final product code required by the spec
+4. **Refactor** once tests pass
 
-<!-- CUSTOMIZE: Define which scenarios are exempt from strict TDD -->
+<!-- CUSTOMIZE: Define which scenarios are exempt from strict TDD, if any. -->
 
 ### Test-to-Spec Traceability
 
-Test file headers must reference the associated spec source, ensuring every test is traceable to a specific spec entry:
+Test file headers should reference the associated spec source:
 
-```
+```ts
 /**
  * @spec docs/design-docs/xxx.md — P1, P3, B1, B2
  */
 ```
 
+For no-doc tasks, reference the issue/PR/conversation plan if your test framework supports file-level comments.
+
 ## Development Workflow
 
 ### Document-Driven Principle (Mandatory)
 
-> ⛔ This is not a suggestion — it is a hard requirement. Skipping documentation steps = task failure.
+> Knowledge the agent cannot see does not exist. Durable decisions, proposals, and context must live in `docs/`, not only in conversation or memory.
 
-> Knowledge the agent can't see doesn't exist. All decisions, proposals, and context must live in `docs/`, not in conversation or memory.
+**Before starting a task:** read the relevant docs from the Repository Knowledge Map.
 
-**Before starting a task — read docs first:** Check the "Repository Knowledge Map" above, find and read relevant docs before starting work.
-
-**After completing a task — must update docs (see Doc Sync Matrix below).**
+**After completing a task:** update docs according to the Doc Sync Matrix.
 
 #### Doc Sync Matrix
 
-> Use this table to determine which docs need updating. When filling the Exec Plan's "Docs Impact" section, reference this matrix.
-
 | Trigger Event | Must check / update |
 |---|---|
-| **Exec Plan completed** | [STATE.md](docs/STATE.md), [DECISIONS.md](docs/DECISIONS.md), [exec-plans/index.md](docs/exec-plans/index.md) (move to `completed/`), [knowledge-base.md](docs/product-specs/knowledge-base.md), [ARCHITECTURE.md](ARCHITECTURE.md) |
-| **Design Doc adopted** | [DECISIONS.md](docs/DECISIONS.md) (record adoption decision), [ARCHITECTURE.md](ARCHITECTURE.md) (if architecture changes) |
-| **Product feature added/changed** | [knowledge-base.md](docs/product-specs/knowledge-base.md), [STATE.md](docs/STATE.md) (Feature Status) |
+| **Exec Plan completed** | [STATE.md](docs/STATE.md), [exec-plans/index.md](docs/exec-plans/index.md) (move plan to `completed/`), [knowledge-base.md](docs/product-specs/knowledge-base.md) if product behavior changed, [ARCHITECTURE.md](ARCHITECTURE.md) if architecture changed |
+| **Design Doc adopted** | [ARCHITECTURE.md](ARCHITECTURE.md) if architecture changed; record in [DECISIONS.md](docs/DECISIONS.md) only if the decision crosses the Design Doc boundary |
+| **Product feature added/changed** | [knowledge-base.md](docs/product-specs/knowledge-base.md), [STATE.md](docs/STATE.md) |
 | **Architecture/layering changed** | [ARCHITECTURE.md](ARCHITECTURE.md) |
-| **Technical decision made (in conversation, design doc, or plan)** | [DECISIONS.md](docs/DECISIONS.md) — decisions are not limited to plan completion; any meaningful trade-off or choice must be recorded |
-| **New infrastructure/dependency introduced** | [STATE.md](docs/STATE.md), [ARCHITECTURE.md](ARCHITECTURE.md) |
-| **New design proposal** | Create doc in `docs/design-docs/` (use [template](docs/templates/design-doc.md)), update [index.md](docs/design-docs/index.md) |
-| **New execution plan** | Create doc in `docs/exec-plans/active/` (use [template](docs/templates/exec-plan.md)), update [index.md](docs/exec-plans/index.md) |
-| **New tech debt discovered** | [tech-debt.md](docs/exec-plans/tech-debt.md) |
-| **Quality score changes** | [QUALITY_SCORE.md](docs/QUALITY_SCORE.md) |
+| **Technical decision made without a carrying doc** | [DECISIONS.md](docs/DECISIONS.md), after applying the admission criteria in that file |
+| **New infrastructure/dependency/deployment target introduced** | [STATE.md](docs/STATE.md), [DEPLOYMENT.md](docs/DEPLOYMENT.md), [ARCHITECTURE.md](ARCHITECTURE.md) |
+| **New design proposal** | Create a doc in `docs/design-docs/` using [design-doc.md](docs/templates/design-doc.md), update [design-docs/index.md](docs/design-docs/index.md) |
+| **New execution plan** | Create a doc in `docs/exec-plans/active/` using [exec-plan.md](docs/templates/exec-plan.md), update [exec-plans/index.md](docs/exec-plans/index.md) |
+| **New tech debt discovered** | [TECH_DEBT.md](docs/TECH_DEBT.md), after applying the admission criteria in that file |
+| **New product gap / deferred decision / operational follow-up discovered** | [BACKLOG.md](docs/BACKLOG.md), after applying the admission criteria in that file |
+
+**STATE.md update rule:** `STATE.md` is a current-state snapshot. Update the affected section in place. Do not append changelog entries, plan-by-plan history, or progress logs.
 
 **Cross-reference rule:** When updating any document, check whether related documents also need syncing. Documents are never updated in isolation.
 
-**Index maintenance:** After adding or moving any doc under `docs/`, you must update the corresponding `index.md` to keep the index consistent with actual files.
+**Index maintenance:** After adding or moving any doc under `docs/`, update the corresponding `index.md`.
 
-**When to create a Design Doc** — When any of the following apply, create one in `docs/design-docs/` (use [template](docs/templates/design-doc.md)):
+**When to create a Design Doc — default: do not create one.** Create a Design Doc only when both conditions are true:
 
-- Adding a new module or subsystem
-- Cross-module refactoring or changing dependency directions
-- Introducing a new external dependency or technology choice
-- 2+ viable approaches that need comparison
+- The change is materially significant: new module/subsystem, module boundary or dependency direction change, data model or external contract change, new external dependency choice, or user-visible interaction model redesign
+- There are at least two real approaches with different structural consequences, and choosing wrong would cause multi-file or irreversible rework
 
-**When to create an Exec Plan** — When any of the following apply, create one in `docs/exec-plans/active/` (use [template](docs/templates/exec-plan.md)):
+Do **not** create a Design Doc for single-component UI adjustments, copy/parameter/threshold changes, implementation-path-obvious features, bug fixes, or single-point performance fixes.
 
-- Expected to modify ≥ 3 modules/directories
-- Involves database migrations or irreversible changes
-- Implementation steps have explicit ordering dependencies
+**When to create an Exec Plan — default: do not create one.** Create an Exec Plan only when any condition is true:
+
+- Cross-package or cross-service cutover with ordering dependencies and an unsafe intermediate state
+- Database migration or other irreversible change
+- Multi-PR / multi-session work that needs durable resume state
+
+A change touching many files is not by itself an Exec Plan trigger if the work can be completed safely in one PR.
 
 **Document Naming Conventions:**
 
-| Document Type | Format                              | Location                      | Example            |
-| ------------- | ----------------------------------- | ----------------------------- | ------------------ |
-| Design Doc    | `D{序号}-{kebab-case-描述}.md`       | `docs/design-docs/`           | `D1-auth-flow.md`  |
-| Exec Plan     | `E{序号}-{kebab-case-描述}.md`       | `docs/exec-plans/active/`     | `E1-db-migration.md` |
+| Document Type | Format | Location | Example |
+|---|---|---|---|
+| Design Doc | `D{number}-{kebab-case-description}.md` | `docs/design-docs/` | `D1-auth-flow.md` |
+| Exec Plan | `E{number}-{kebab-case-description}.md` | `docs/exec-plans/active/` | `E1-db-migration.md` |
 
-- **序号**必须递增，从对应 `index.md` 表格中获取下一个可用编号
-- **描述**使用 kebab-case（小写英文，单词间用 `-` 连接），简短概括主题
-- Exec Plan 完成后，文件从 `active/` 移至 `completed/`，文件名不变
+- The number must increment from the corresponding `index.md`
+- The description must be short kebab-case
+- Completed Exec Plans move from `active/` to `completed/` without renaming
 
-**No doc needed:** Single-file bug fixes, style tweaks, copy changes, and other localized modifications.
+**No doc needed:** bug fixes, style/copy tweaks, single-PR features, and localized refactors that do not hit the criteria above. "No doc needed" does not mean "no plan needed": Hard Rule #3 and Hard Rule #10 still apply, with the conversation or PR description as the carrier.
 
 ### Self-Rationalization Check (Agent self-check)
 
-> When you catch yourself thinking any of the following, **stop** and follow the process.
-
-| If you're thinking...                                   | The reality is...                                                                          |
-| ------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| "This change is simple, no need for the full process"   | Simple changes are where assumptions break most easily. The short process runs fast        |
-| "I already know how it works"                           | You know how you _think_ it works. Verify with evidence                                    |
-| "TDD is too heavy for this fix"                         | Simple code breaks too. A test takes only 30 seconds                                       |
-| "I'll add docs later"                                   | Later never comes. Write them now                                                          |
-| "This time is different"                                | Every time is different, but the process always applies                                    |
-| "Let me code first to confirm it works, then add tests" | Tests first = "what should happen"; tests after = "what happened". Fundamentally different |
-| "This decision is obvious, no need to list alternatives"            | "Obvious" means your prior is strong, not that the option space is small. Rule #12 requires enumeration precisely so your prior can be reviewed |
-| "Just change these two lines and it'll work, no need to touch other code" | This is minimum-diff thinking (rule #11). Ask "is the abstraction right" first, then "how big is the diff" — order matters |
-| "This choice isn't important, not worth asking"                      | Importance is the user's call, not the agent's. Per rule #10, list it in Decisions Made Without Asking and let the user decide |
+| If you are thinking... | The reality is... |
+|---|---|
+| "This is simple; no process needed" | Simple changes are where assumptions break most easily |
+| "I already know how it works" | Verify with evidence |
+| "TDD is too heavy for this fix" | Simple code breaks too |
+| "I will update docs later" | Later does not happen; update docs now |
+| "Just change these two lines" | This is minimum-diff thinking; check the abstraction first |
+| "This decision is not important" | Importance is the user's call; list the decision for review |
 
 ### Pre-delivery Self-review (Mandatory)
 
-After code is written and CI passes, the agent must run the following checklist and show results to the user:
+After code is written and CI passes, show the checklist results to the user.
 
 **Spec Alignment Check:**
 
 - [ ] Every postcondition in the behavioral contract has a corresponding test
 - [ ] Every scenario in the edge case catalog has a corresponding test
-- [ ] Are there behaviors in the implementation not described in the spec? (If so, add to spec or remove implementation)
+- [ ] Implementation behavior is described in the spec, or the spec was updated
 
 **Test Quality Check:**
 
-- [ ] Any tautological tests (tests that just repeat implementation logic)?
-- [ ] Over-mocking (mocking away core logic that should be tested)?
-- [ ] Testing only happy paths while ignoring error paths?
+- [ ] No tautological tests that only repeat implementation logic
+- [ ] No over-mocking of core logic
+- [ ] Error paths covered where relevant
 
 **Implementation Quality Check:**
 
-- [ ] Any placeholder comments (TODO / FIXME / HACK) left unhandled?
-- [ ] Error handling using generic catch-all instead of specific error types?
-- [ ] Any implicit external state dependencies (should be passed as parameters)?
-- [ ] Does the implementation follow ARCHITECTURE.md layering rules?
+- [ ] No unresolved placeholder comments (`TODO`, `FIXME`, `HACK`) unless tracked in `TECH_DEBT.md`
+- [ ] Error handling uses specific error types, not generic catch-all suppression
+- [ ] External state dependencies are explicit
+- [ ] Implementation follows `ARCHITECTURE.md` layering rules
 
 **Security Check:**
 
-- [ ] User input validated at the boundary?
-- [ ] Operations verify caller permissions where applicable?
-- [ ] Any sensitive information that could leak to unauthorized contexts?
+- [ ] User input validated at the boundary
+- [ ] Operations verify caller permissions where applicable
+- [ ] No sensitive information leaks to unauthorized contexts
 
-**Doc Sync Check (show diff or summary of each updated doc as evidence):**
+**Doc Sync Check (show evidence, not just checkboxes):**
 
-- [ ] Does this change complete an Exec Plan? → Updated STATE.md, DECISIONS.md, index.md, moved plan to `completed/`
-- [ ] Does this change alter architecture or layering? → Updated ARCHITECTURE.md
-- [ ] Does this change add/modify a product feature? → Updated knowledge-base.md, STATE.md (Feature Status)
-- [ ] Were any technical decisions or trade-offs made during this task (in conversation, design, or implementation)? → Recorded in DECISIONS.md
-- [ ] Do the updated documents have cross-references that need syncing? → Verified consistency
-- [ ] **Evidence**: List each doc updated and a one-line summary of the change (do NOT just check boxes)
+- [ ] If this completed an Exec Plan, `STATE.md` was updated in place, the plan moved to `completed/`, and `exec-plans/index.md` was updated
+- [ ] If architecture/layering changed, `ARCHITECTURE.md` was updated
+- [ ] If product behavior changed, `knowledge-base.md` and `STATE.md` were updated
+- [ ] If deployment/infrastructure changed, `DEPLOYMENT.md`, `STATE.md`, and `ARCHITECTURE.md` were checked
+- [ ] Decisions meeting `DECISIONS.md` admission criteria were recorded
+- [ ] New tech debt and backlog items were triaged into `TECH_DEBT.md` vs `BACKLOG.md`
+- [ ] Cross-references between updated docs were verified
+- [ ] Evidence: list each updated doc and a one-line summary
 
 ### Task Completion Criteria
 
-A development task is considered "complete" only when ALL of the following are met:
+A development task is complete only when all conditions are met:
 
-1. ✅ CI checks all pass
-2. ✅ Self-review checklist all checked (no remaining items, or reasons noted)
+1. ✅ CI checks pass
+2. ✅ Self-review checklist shown to the user
 3. ✅ Affected docs updated
-4. ✅ New/modified code is traceable to a spec (specific entry in Design Doc or Exec Plan)
-5. ✅ Self-review results summary shown to the user
+4. ✅ New/modified code is traceable to a spec source (Design Doc, Exec Plan, or approved no-doc task plan)
+5. ✅ Remaining gaps are either fixed or explicitly tracked in `TECH_DEBT.md` / `BACKLOG.md`
 
 ## Git Workflow
 
 - **Never commit directly to the main branch** — verify current branch with `git branch` before committing
 - Merge via feature branch + PR. Naming: `feat/xxx`, `fix/xxx`, `refactor/xxx`, `test/xxx`
-- **Never run `git checkout -- .`, `git checkout <branch> -- .`, or `git restore .` with uncommitted changes in the working tree** — these irreversibly drop working-tree changes. To verify an older code state, use `git worktree` or a new branch — do not touch the current working tree.
-- **Prefix any git command that opens an editor with `GIT_EDITOR=true`** (non-interactive environments hang the command otherwise, causing timeouts / aborted runs). Common cases:
+- **Never run `git checkout -- .`, `git checkout <branch> -- .`, or `git restore .` with uncommitted changes in the working tree**
+- **Prefix any git command that opens an editor with `GIT_EDITOR=true`**:
   - `git rebase --continue` / `git rebase -i` → `GIT_EDITOR=true git rebase --continue`
-  - `git commit --amend` (without `-m`) → add `-m "..."` or `--no-edit`
-  - `git merge` (with merge commit and no `-m`) → add `--no-edit` or `-m "..."`
-  - `git tag -a` / `git revert` (without `-m`) → add `-m "..."`
+  - `git commit --amend` without `-m` → add `-m "..."` or `--no-edit`
+  - `git merge` with a merge commit and no `-m` → add `--no-edit` or `-m "..."`
+  - `git tag -a` / `git revert` without `-m` → add `-m "..."`

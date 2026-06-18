@@ -1,27 +1,32 @@
 # Execution Plan Index
 
-> The agent checks here to understand all plan statuses and priorities, then dives into specific docs as needed.
+> The agent checks here to understand active and completed execution plans.
 >
-> **Last updated**: YYYY-MM-DD
+> **Last updated**: 2026-06-18
+>
+> Keep this index synchronized with files under `active/` and `completed/`. This repository template should not ship with any active or completed plans.
+
+---
+
+## Numbering Rules
+
+- Default format: `E{N}-{kebab-case-description}.md`
+- Projects may define domain-specific prefixes if useful, but the convention must be documented here before use
+- The number must increment from this index
+- Completed plans move from `active/` to `completed/` without renaming
 
 ---
 
 ## Active Plans
 
-| ID          | Priority                              | Plan                               | Status                                             | Summary        |
-| ----------- | ------------------------------------- | ---------------------------------- | -------------------------------------------------- | -------------- |
-| <!-- E1 --> | <!-- 🔴 High / 🟡 Medium / 🟢 Low --> | <!-- [Title](active/E1-xxx.md) --> | <!-- 📋 Proposal / ⏳ Pending / 🔄 In Progress --> | <!-- brief --> |
+| ID | Plan | Status | Summary |
+|---|---|---|---|
+| — | (none) | — | — |
 
 ---
 
 ## Completed Plans
 
-| ID          | Plan                                  | Completed           | Summary        |
-| ----------- | ------------------------------------- | ------------------- | -------------- |
-| <!-- E1 --> | <!-- [Title](completed/E1-xxx.md) --> | <!-- YYYY-MM-DD --> | <!-- brief --> |
-
----
-
-## Related
-
-- **[Tech Debt Tracking](tech-debt.md)** — Known tech debt and repayment priorities
+| ID | Plan | Completed | Summary |
+|---|---|---|---|
+| — | (none) | — | — |
