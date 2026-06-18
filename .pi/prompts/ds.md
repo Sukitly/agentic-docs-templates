@@ -2,95 +2,93 @@
 description: Check and sync all docs based on current branch changes
 ---
 
-You need to perform a complete documentation sync check and update based on the current branch's code changes.
+Perform a complete documentation sync check and update based on the current branch changes.
 
-> **Important prerequisite:** When the user triggers this command, it means all work requiring manual verification (UI confirmation, manual testing, SQL script execution, deployment verification, etc.) is already complete. If the current Exec Plan has all Phases completed and the user triggers this command, treat the plan as complete — proceed directly with status updates and file migration. Do not ask the user "have you verified?".
+> Important prerequisite: when the user triggers this command, manual verification that only the user can perform is already complete. If an associated Exec Plan has all implementation work completed and the user triggers this command, treat the plan as complete and proceed with status/index/file migration.
 
 ## Step 1: Understand the scope of changes
 
-First confirm the current branch, then get the change scope:
+Confirm the current branch and change scope:
 
 ```bash
 branch=$(git branch --show-current)
 if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
-  # On main branch: check uncommitted changes
   git diff --stat
   git diff --cached --stat
 else
-  # On feature branch: check full diff against main (committed + uncommitted)
   git diff main --stat
   git log main..HEAD --oneline
 fi
 ```
 
-## Step 2: Check against the Doc Sync Matrix line by line
+## Step 2: Check the Doc Sync Matrix line by line
 
-Compare against the matrix below to determine whether each trigger condition is hit by this change. **Check every row — do not skip any.**
+Check every row. Do not skip rows because the change feels small.
 
 | Trigger Event | Must check / update |
 |---|---|
-| **Exec Plan completed** | STATE.md, DECISIONS.md, exec-plans/index.md (move to `completed/`), knowledge-base.md, ARCHITECTURE.md |
-| **Design Doc adopted** | DECISIONS.md (record adoption decision), ARCHITECTURE.md (if architecture changes) |
-| **Product feature added/changed** | knowledge-base.md, STATE.md (Feature Status) |
-| **Architecture/layering changed** | ARCHITECTURE.md |
-| **Technical decision made (in conversation, design doc, or plan)** | DECISIONS.md — any meaningful trade-off or choice must be recorded |
-| **New infrastructure/dependency introduced** | STATE.md, ARCHITECTURE.md |
-| **New design proposal** | Create doc in `docs/design-docs/`, update index.md |
-| **New execution plan** | Create doc in `docs/exec-plans/active/`, update index.md |
-| **New tech debt discovered** | tech-debt.md |
-| **Quality score changes** | QUALITY_SCORE.md |
+| Exec Plan completed | `docs/STATE.md`, `docs/exec-plans/index.md` (move plan to `completed/`), `docs/product-specs/knowledge-base.md` if product behavior changed, `ARCHITECTURE.md` if architecture changed |
+| Design Doc adopted | `ARCHITECTURE.md` if architecture changed; `docs/DECISIONS.md` only if the decision crosses the Design Doc boundary |
+| Product feature added/changed | `docs/product-specs/knowledge-base.md`, `docs/STATE.md` |
+| Architecture/layering changed | `ARCHITECTURE.md` |
+| Technical decision made without a carrying doc | `docs/DECISIONS.md`, after applying the file's admission criteria |
+| New infrastructure/dependency/deployment target introduced | `docs/STATE.md`, `docs/DEPLOYMENT.md`, `ARCHITECTURE.md` |
+| New design proposal | Create doc in `docs/design-docs/`, update `docs/design-docs/index.md` |
+| New execution plan | Create doc in `docs/exec-plans/active/`, update `docs/exec-plans/index.md` |
+| New tech debt discovered | `docs/TECH_DEBT.md`, after applying the file's admission criteria |
+| New product gap / deferred decision / operational follow-up discovered | `docs/BACKLOG.md`, after applying the file's admission criteria |
 
-## Step 2.5: Exec Plan lifecycle check (frequently missed — must verify separately)
+## Step 2.5: Exec Plan lifecycle check
 
-If this change is associated with an Exec Plan, perform the following checks:
+If this change is associated with an Exec Plan:
 
-1. **Confirm plan status**: Read the Exec Plan file and check if all Phases are completed. If all are done:
-2. **Update plan document status**: Change the `**Status**` in the file header to `✅ Completed`
-3. **Move the file**: Move from `docs/exec-plans/active/` to `docs/exec-plans/completed/`
-   ```bash
-   git mv docs/exec-plans/active/E{N}-xxx.md docs/exec-plans/completed/E{N}-xxx.md
-   ```
-4. **Update index.md**: Read `docs/exec-plans/index.md`, move the plan's entry from the "Active" table to the "Completed" table. **Read the current content of index.md first, confirm the position and format of both tables, then modify.**
+1. Read the Exec Plan file.
+2. If all implementation work is done, set header status to `✅ Completed`.
+3. Move the file from `docs/exec-plans/active/` to `docs/exec-plans/completed/`.
+4. Update `docs/exec-plans/index.md`: remove from Active Plans, add to Completed Plans.
+5. Verify with `ls docs/exec-plans/active/`, `ls docs/exec-plans/completed/`, and re-read `docs/exec-plans/index.md`.
 
-> ⚠️ Steps 3 and 4 are the most commonly missed operations. Even if you think you've already done them, verify with `ls docs/exec-plans/active/` and `ls docs/exec-plans/completed/` that the file has actually been moved, and re-read index.md to confirm the entry has been migrated.
+## Step 3: Read affected docs before editing
 
-## Step 3: Read the current content of affected documents
-
-For each document hit in Step 2, **read its current content first** to understand the existing structure and context before deciding how to update. Do not modify from memory.
+For each doc hit in Step 2, read the current file first. Do not update from memory.
 
 ## Step 4: Execute updates
 
-For each document that needs updating, make the specific changes. Follow these rules:
+Rules:
 
-- **DECISIONS.md**: Use the correct prefix (`E[N]` for plan decisions / `AD[N]` for ad-hoc decisions / `D[N]` for design doc decisions). Record "what changed, why, key trade-offs, what was deferred/remaining". If someone joining the project tomorrow would ask "why did you do it this way?", it should be recorded
-- **STATE.md**: Only update current state, not history (history goes in DECISIONS.md)
-- **knowledge-base.md**: Update feature descriptions, key file paths, database schema
-- **ARCHITECTURE.md**: Update module structure, layering rules, dependency directions
-- **exec-plans/index.md**: If plan is completed, move the entry from Active to Completed
-- **Cross-references**: When updating any document, check whether related documents also need syncing. Documents are never updated in isolation
+- `docs/STATE.md`: update current state in place; no changelog entries.
+- `docs/DECISIONS.md`: record only decisions that pass admission criteria. Do not duplicate Design Doc / Exec Plan details.
+- `docs/TECH_DEBT.md`: only implementation deviations with repayment paths.
+- `docs/BACKLOG.md`: product gaps, deferred decisions, ops/security follow-ups.
+- `docs/DEPLOYMENT.md`: deploy target/env/smoke/rollback facts only.
+- `docs/product-specs/knowledge-base.md`: update user-visible feature behavior, key files, and data model.
+- `ARCHITECTURE.md`: update module structure, layering rules, dependency directions.
+- Index files: keep indexes synchronized with actual docs.
+- Cross-references: docs are not updated in isolation.
 
 ## Step 5: Present evidence checklist
 
-After completion, present the following evidence checklist. **Do not just check boxes — you must write specific content.**
+Do not only check boxes. Provide concrete evidence.
 
-```
+```markdown
 ## Doc Sync Results
 
-### Exec Plan Lifecycle (if applicable)
-- Associated plan: E{N}-xxx
-- Plan status updated: ✅ / N/A
-- File moved from active/ to completed/: ✅ (verified: `ls docs/exec-plans/completed/E{N}-*`) / N/A
-- index.md entry migrated: ✅ / N/A
+### Exec Plan Lifecycle
+- Associated plan: E{N}-xxx / N/A
+- Status updated: ✅ / N/A
+- File moved to completed/: ✅ / N/A
+- Index entry migrated: ✅ / N/A
 
 ### Document Updates
 
 | Document | Needs update? | Change summary |
 |---|---|---|
-| STATE.md | ✅ Updated | Added Feature X to core features list |
-| DECISIONS.md | ✅ Updated | Added AD7 — chose approach A over B |
-| ARCHITECTURE.md | ⬜ No update needed | This change did not involve architecture |
-| knowledge-base.md | ✅ Updated | Updated file paths for XX module |
-| exec-plans/index.md | ✅ Updated | E{N} moved from Active to Completed |
-| tech-debt.md | ⬜ No update needed | — |
-| QUALITY_SCORE.md | ⬜ No update needed | — |
+| STATE.md | ✅ Updated / No | ... |
+| DECISIONS.md | ✅ Updated / No | ... |
+| ARCHITECTURE.md | ✅ Updated / No | ... |
+| DEPLOYMENT.md | ✅ Updated / No | ... |
+| knowledge-base.md | ✅ Updated / No | ... |
+| exec-plans/index.md | ✅ Updated / No | ... |
+| TECH_DEBT.md | ✅ Updated / No | ... |
+| BACKLOG.md | ✅ Updated / No | ... |
 ```

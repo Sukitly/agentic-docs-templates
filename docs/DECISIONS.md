@@ -1,24 +1,26 @@
 # Decision Log
 
-> Agent should read this file at the start of each new session to quickly understand historical decision context.
+> **Last updated**: 2026-06-18
 >
-> **Last updated**: YYYY-MM-DD
+> This file records decisions that still constrain future work. It is not a changelog and not a place to duplicate Design Doc / Exec Plan details.
 >
-> ### What to record here
+> ### Admission Criteria
 >
-> Record **any meaningful technical decision or trade-off**, not just plan completions. This includes:
-> - Decisions from completed Exec Plans
-> - Decisions made during conversation (e.g., "we chose X over Y because...")
-> - Decisions from adopted Design Docs
-> - Ad-hoc trade-offs during implementation
+> Record a decision only when at least one condition is true:
 >
-> **How to judge if something is a "decision":** If someone joining the project tomorrow would ask "why did you do it this way?", it should be recorded here.
+> - Architecture boundary, dependency direction, data model, or external contract choice that constrains future implementation
+> - Rejected approach that is likely to be proposed again and needs a durable "why not"
+> - Cross-layer / cross-package engineering convention
+> - Deferred decision with explicit restart conditions
+>
+> Do not record UI placement, one-off file/function naming, single-point implementation choices, or details already fully contained in a Design Doc / Exec Plan. In those cases, keep the decision in the carrying doc.
 >
 > ### Format
 >
-> - Plan-related decisions: use `E[N]` prefix (N = Exec Plan number)
-> - Conversation/ad-hoc decisions: use `AD[N]` prefix (AD = Ad-hoc Decision, N = sequential)
-> - Design Doc decisions: use `D[N]` prefix (N = Design Doc number)
+> - Ad-hoc / conversation decisions: `AD[N]`
+> - Design Doc decisions: `D[N]` only when the decision crosses the document boundary
+> - Exec Plan decisions: `E[N]` only when the decision crosses the plan boundary
+> - Keep each entry short: what changed, why, trade-off, link.
 
 ---
 
@@ -26,18 +28,11 @@
 
 <!-- EXAMPLE (remove when first real entry is added):
 
-### E1 — Database Migration to PostgreSQL (2025-01-15)
-- **What changed**: Migrated from SQLite to PostgreSQL for production
-- **Why**: SQLite couldn't handle concurrent writes under load
-- **Key trade-offs**: Added deployment complexity (need managed DB), but gained concurrent write support and better query performance
-- **Not done / Remaining**: Read replicas deferred to E3
-- **Details**: [E1-db-migration.md](exec-plans/completed/E1-db-migration.md)
+### AD1 — Chose Zod over Joi for boundary validation (2025-01-20)
 
-### AD1 — Chose Zod over Joi for validation (2025-01-20)
-- **What changed**: Adopted Zod as the project-wide validation library
-- **Why**: Better TypeScript type inference, smaller bundle size
-- **Key trade-offs**: Less mature ecosystem than Joi, but type safety benefit outweighs
-- **Not done / Remaining**: None
-- **Details**: Decided in conversation, no separate doc
+- **Decision**: Use Zod for all external input boundary schemas.
+- **Why**: Better TypeScript inference and shared client/server schema reuse.
+- **Trade-off**: Smaller ecosystem than Joi; accepted because type inference matters more for this codebase.
+- **Link**: Conversation / PR / related doc.
 
 -->
