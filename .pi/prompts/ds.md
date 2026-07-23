@@ -37,6 +37,7 @@ Check every row. Do not skip rows because the change feels small.
 | New execution plan | Create doc in `docs/exec-plans/active/`, update `docs/exec-plans/index.md` |
 | New tech debt discovered | `docs/TECH_DEBT.md`, after applying the file's admission criteria |
 | New product gap / deferred decision / operational follow-up discovered | `docs/BACKLOG.md`, after applying the file's admission criteria |
+| Document has completed its purpose but retains historical value | Move it to `docs/archive/` and record its original location and archive reason; delete it if it has no historical value |
 
 ## Step 2.5: Exec Plan lifecycle check
 
@@ -56,13 +57,17 @@ For each doc hit in Step 2, read the current file first. Do not update from memo
 
 Rules:
 
-- `docs/STATE.md`: update current state in place; no changelog entries.
-- `docs/DECISIONS.md`: record only decisions that pass admission criteria. Do not duplicate Design Doc / Exec Plan details.
-- `docs/TECH_DEBT.md`: only implementation deviations with repayment paths.
-- `docs/BACKLOG.md`: product gaps, deferred decisions, ops/security follow-ups.
-- `docs/DEPLOYMENT.md`: deploy target/env/smoke/rollback facts only.
-- `docs/product-specs/knowledge-base.md`: update user-visible feature behavior, key files, and data model.
-- `ARCHITECTURE.md`: update module structure, layering rules, dependency directions.
+- `docs/STATE.md`: rewrite affected entries in place, retaining only the current conclusion and authoritative links; each entry is no more than five lines (roughly 300 words).
+- `docs/product-specs/knowledge-base.md`: rewrite affected feature entries in place, retaining only purpose, current behavior, authoritative docs, key paths, and known gaps; each entry is no more than five lines (roughly 300 words).
+- `docs/DECISIONS.md`: record only decisions that pass admission criteria and still constrain future work; each entry is no more than 15 lines. Delete expired or superseded entries, or archive them when they retain historical research value.
+- `docs/TECH_DEBT.md`: record only implementation deviations with evidence, engineering impact, and repayment paths.
+- `docs/BACKLOG.md`: record only product gaps, deferred decisions, and ops/security follow-ups with explicit value or restart conditions.
+- When changing a related domain, revalidate affected existing Decision, Tech Debt, and Backlog entries. Delete entries that are repaid, started, abandoned, invalidated, or superseded instead of only appending new rows.
+- `TECH_DEBT.md` and `BACKLOG.md` do not maintain resolved/completed tables or duplicate active Exec Plan tracking.
+- Durable documents must not track whether a specific migration is pending or applied; transient state belongs in the deployment system or an active Exec Plan.
+- `docs/DEPLOYMENT.md`: record only deployment targets, environments, smoke tests, rollback, and deployment mechanism facts.
+- `ARCHITECTURE.md`: update module structure, layering rules, and dependency directions.
+- `docs/archive/`: store only documents that have completed their purpose but retain historical research value; archives are read-only and not current authority.
 - Index files: keep indexes synchronized with actual docs.
 - Cross-references: docs are not updated in isolation.
 
@@ -91,4 +96,12 @@ Do not only check boxes. Provide concrete evidence.
 | exec-plans/index.md | ✅ Updated / No | ... |
 | TECH_DEBT.md | ✅ Updated / No | ... |
 | BACKLOG.md | ✅ Updated / No | ... |
+| archive/ | ✅ Archived / No | ... |
+
+### Governance Constraints
+- STATE / knowledge-base entry budgets: ✅
+- DECISIONS entry budget: ✅
+- Existing debt / backlog / decisions revalidated: ✅
+- No migration application state in durable documents: ✅
+- Archives not treated as current authority: ✅
 ```

@@ -1,8 +1,8 @@
 # Decision Log
 
-> **Last updated**: 2026-06-18
+> **Last updated**: 2026-07-23
 >
-> This file records decisions that still constrain future work. It is not a changelog and not a place to duplicate Design Doc / Exec Plan details.
+> This file records decisions that still constrain future work. It is not a changelog and not a place to duplicate Design Doc / Exec Plan details. Each entry must be no more than 15 lines.
 >
 > ### Admission Criteria
 >
@@ -14,6 +14,13 @@
 > - Deferred decision with explicit restart conditions
 >
 > Do not record UI placement, one-off file/function naming, single-point implementation choices, or details already fully contained in a Design Doc / Exec Plan. In those cases, keep the decision in the carrying doc.
+>
+> ### Lifecycle
+>
+> - Revalidate existing entries when the related domain changes; do not only append new decisions
+> - Delete a decision when it expires, is superseded, or no longer constrains future work
+> - Move it to `docs/archive/` only when it retains historical research value; archived content is not current authority
+> - Do not keep a retired-decisions list; history belongs in git, carrying documents, and archived snapshots
 >
 > ### Format
 >

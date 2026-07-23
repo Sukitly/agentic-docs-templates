@@ -2,7 +2,7 @@
 
 A language-agnostic, framework-agnostic repository template for document-driven AI coding agent development.
 
-AI coding agents are powerful but undisciplined by default. This template gives agents a durable context system: read docs before changing code, plan before executing, write tests before implementation, keep documentation synchronized, and avoid low-quality "minimum diff" shortcuts.
+AI coding agents are powerful but undisciplined by default. This template gives agents a durable context system: read docs before changing code, plan before executing, write tests before implementation, keep documentation synchronized, and use admission, budget, deletion, and archive rules to prevent state snapshots, decision logs, technical debt, and backlogs from becoming dumping grounds.
 
 ## Table of Contents
 
@@ -55,6 +55,8 @@ The bootstrap prompt works with any AI coding agent. It analyzes the project, co
 │   ├── TESTING.md                 # Testing strategy
 │   ├── TECH_DEBT.md               # Implementation deviations with repayment paths
 │   ├── BACKLOG.md                 # Product gaps, deferred decisions, ops follow-ups
+│   ├── archive/
+│   │   └── README.md              # Read-only archive boundary and catalog
 │   ├── product-specs/
 │   │   ├── knowledge-base.md      # Feature descriptions, file paths, data model
 │   │   └── glossary.md            # Canonical terms and definitions
@@ -82,18 +84,31 @@ The bootstrap prompt works with any AI coding agent. It analyzes the project, co
 3. **Plan before execute.** Present planned file changes and wait for explicit approval.
 4. **Tests first for core logic.** Use TDD for behavior that matters.
 5. **Self-review and sync docs.** A task is not complete until checks pass and affected docs are updated.
-6. **No minimum-diff shortcuts.** Choose the right abstraction over the smallest patch.
-7. **No silent decisions.** Non-trivial choices must be explicit; do not fabricate alternatives just to fill a table.
+6. **Documentation is a budgeted current-state system.** Rewrite snapshots in place, delete stale queue entries, and physically separate history from current authority.
+7. **No minimum-diff shortcuts.** Choose the right abstraction over the smallest patch.
+8. **No silent decisions.** Non-trivial choices must be explicit; do not fabricate alternatives just to fill a table.
+9. **No unrequested actions.** Report out-of-scope findings instead of modifying them opportunistically.
 
 ### Document Types
 
-| Type | When to Create | Template |
+| Type | When to Create | Location |
 |---|---|---|
+| Current-state snapshot | Always present; stores current conclusions by domain | `docs/STATE.md` |
+| Product knowledge snapshot | Always present; stores current behavior and entry points by feature | `docs/product-specs/knowledge-base.md` |
 | Design Doc | Significant architecture/product design change with real competing approaches | `docs/templates/design-doc.md` |
 | Exec Plan | Cross-package/service cutover, irreversible migration, or multi-PR/multi-session work | `docs/templates/exec-plan.md` |
 | Decision Log | Still-binding cross-cutting decision without a carrying doc | `docs/DECISIONS.md` |
-| Tech Debt | Implementation deviation from known-correct shape with repayment path | `docs/TECH_DEBT.md` |
-| Backlog | Product gap, deferred decision, or ops/security follow-up | `docs/BACKLOG.md` |
+| Tech Debt | Implementation deviation with evidence, engineering impact, and a repayment path | `docs/TECH_DEBT.md` |
+| Backlog | Product gap, deferred decision, or ops/security follow-up with explicit value or restart conditions | `docs/BACKLOG.md` |
+| Historical Archive | Document has completed its purpose but retains historical research value | `docs/archive/` |
+
+### Documentation Freshness Boundaries
+
+- `STATE.md` and `knowledge-base.md` entries are no more than five lines (roughly 300 words) and contain only current conclusions and authoritative links; push excess detail into a Design Doc or Exec Plan.
+- `DECISIONS.md` entries are no more than 15 lines and retain only decisions that still constrain future work.
+- `TECH_DEBT.md` and `BACKLOG.md` are active queues, not historical ledgers. Delete entries when repaid, started, abandoned, invalidated, or superseded; do not maintain completed tables or duplicate active Exec Plan tracking.
+- Durable documents do not track whether a specific migration is pending or applied; transient state belongs in the deployment system or an active Exec Plan.
+- `archive/` is read-only and not current authority; delete obsolete content with no historical value.
 
 ### Workflow
 

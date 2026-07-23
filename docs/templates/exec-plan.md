@@ -61,6 +61,7 @@
 
 > Must fill on plan creation. Use the Doc Sync Matrix in `AGENTS.md` to identify affected docs.
 > On plan completion, every row must be checked off — unchecked items mean the plan is not complete.
+> If this plan originates from a `TECH_DEBT.md` or `BACKLOG.md` entry, remove that entry from its source queue immediately when creating the plan and record the removal below; do not wait for plan completion or duplicate tracking.
 
 | Document | What to update | Updated? |
 |---|---|---|
@@ -70,7 +71,7 @@
 | `docs/product-specs/knowledge-base.md` | <!-- e.g., Add feature description --> | ☐ |
 | `docs/DEPLOYMENT.md` | <!-- e.g., Add new deploy target / env / smoke test --> | ☐ |
 | `docs/exec-plans/index.md` | Move this plan to completed | ☐ |
-<!-- Remove rows that do not apply. Add rows for any other affected docs. -->
+<!-- Remove rows that do not apply. Add rows for any other affected docs. If the plan originates from TECH_DEBT or BACKLOG, add the corresponding queue-removal record. -->
 
 ---
 
