@@ -1,14 +1,16 @@
 # Application State
 
-> **Last updated**: 2026-06-18
+> **Last updated**: 2026-07-23
 >
-> This document is the application's current-state snapshot. Keep only current facts, not history.
+> This document is the application's current-state snapshot organized by domain. Keep only current facts, not history or change process.
 >
-> ### Update Rules
+> ### Update Rules (Hard Constraints)
 >
-> - Update the affected section in place when state changes
-> - Do not append changelog entries or plan-by-plan completion notes
-> - Keep the header date as a date only; history belongs in git, Design Docs, Exec Plans, and `DECISIONS.md`
+> - Rewrite the affected entry in place when state changes; never append to an old entry
+> - Each entry contains only the current conclusion plus an authoritative Design Doc, Exec Plan, or source entry point, and is no more than five lines (roughly 300 words)
+> - Push excess detail into the authoritative document instead of repeating implementation details here
+> - Do not include dates, revision history, plan-by-plan completion notes, migration identifiers, or transient states such as "pending" or "applied"
+> - Keep `Last updated` as a date only; history belongs in git, Design Docs, Exec Plans, and `DECISIONS.md`
 
 ---
 

@@ -1,6 +1,6 @@
 # Bootstrap: Set Up Agentic Docs for an Existing Project
 
-> **Version**: 2.1.0
+> **Version**: 2.2.0
 > **This file is an AI agent prompt.** Do not read it as documentation.
 > Copy the content below to your AI coding agent or instruct the agent to read this file directly.
 
@@ -166,9 +166,9 @@ Classify and migrate docs:
 | Technical debt with repayment path | `docs/TECH_DEBT.md` |
 | Product gaps/deferred decisions/ops follow-ups | `docs/BACKLOG.md` |
 | External references/API docs/guides | `docs/references/` |
-| Obsolete docs with historical value | `docs/references/` or project-specific archive, clearly marked read-only |
+| Documents that have completed their purpose but retain historical value | `docs/archive/`; record the original location and archive reason |
 
-After migrating content, delete the superseded original file. Do not keep two docs with the same authority.
+After migrating content, delete the superseded original file. Do not keep two docs with the same authority. Delete obsolete content with no historical value; archive documents are read-only and must not serve as current authority.
 
 Do not modify or delete the root `README.md` unless it contains stale links to moved docs.
 
@@ -180,8 +180,12 @@ Do not modify or delete the root `README.md` unless it contains stale links to m
 4. If a section does not apply, write `N/A — [brief reason]`.
 5. Omit commands that do not exist instead of writing placeholders.
 6. Keep docs concise and factual.
-7. Use today's date for `Last updated` fields.
-8. Use real paths in `ARCHITECTURE.md` and `knowledge-base.md`; every backtick-quoted path that looks local should exist.
+7. Rewrite `STATE.md` and `knowledge-base.md` entries in place by domain/feature. Each entry is no more than five lines (roughly 300 words) and retains only the current conclusion, authoritative document, and key paths.
+8. Keep each `DECISIONS.md` entry to no more than 15 lines and retain only decisions that still constrain future work. Delete expired decisions; archive them only when they retain historical research value.
+9. Keep only active entries in `TECH_DEBT.md` and `BACKLOG.md`. Delete entries that are repaid, started, abandoned, invalidated, or superseded; do not create completed tables or duplicate active Exec Plan tracking.
+10. Durable documents do not track whether a specific migration is pending or applied; transient execution state belongs in the deployment system or an active Exec Plan.
+11. Use today's date for `Last updated` fields.
+12. Use real paths in `ARCHITECTURE.md` and `knowledge-base.md`; every backtick-quoted path that looks local should exist.
 
 ### 3.4 Required Structure
 
@@ -189,6 +193,8 @@ Create missing directories:
 
 ```text
 docs/
+├── archive/
+│   └── README.md
 ├── design-docs/
 ├── exec-plans/
 │   ├── active/
@@ -199,12 +205,13 @@ docs/
 scripts/
 ```
 
-If `active/`, `completed/`, or `references/` is empty, add `.gitkeep`.
+If `active/`, `completed/`, or `references/` is empty, add `.gitkeep`. `archive/` must contain the template's `README.md`, which defines the read-only boundary and maintains the archive catalog.
 
 ### 3.5 Files to Generate
 
 **Copy verbatim from template:**
 
+- `docs/archive/README.md`
 - `docs/templates/design-doc.md`
 - `docs/templates/exec-plan.md`
 - `scripts/check-docs.py`
@@ -220,9 +227,9 @@ If `active/`, `completed/`, or `references/` is empty, add `.gitkeep`.
 | `docs/TESTING.md` | Test categories, layout, commands, guidelines, coverage/quality gates |
 | `docs/product-specs/knowledge-base.md` | Features, key files, data model, user-visible behavior |
 | `docs/product-specs/glossary.md` | Canonical project terms |
-| `docs/DECISIONS.md` | Existing still-binding decisions, if any |
-| `docs/TECH_DEBT.md` | Real implementation deviations with repayment paths |
-| `docs/BACKLOG.md` | Product gaps, deferred decisions, ops/security follow-ups |
+| `docs/DECISIONS.md` | Existing still-binding decisions; remove expired/superseded entries and archive historical snapshots only when needed |
+| `docs/TECH_DEBT.md` | Real implementation deviations with evidence, engineering impact, and repayment paths; active entries only |
+| `docs/BACKLOG.md` | Product gaps, deferred decisions, and ops/security follow-ups with explicit value or restart conditions; active entries only |
 | `docs/design-docs/index.md` | Existing design docs/RFCs/ADRs migrated into `docs/design-docs/` |
 | `docs/exec-plans/index.md` | Existing active/completed plans migrated into `docs/exec-plans/` |
 
@@ -248,7 +255,9 @@ Append only missing entries:
 ### 3.8 Cleanup
 
 - Search for stale docs outside the new structure.
-- Remove duplicate or superseded docs after migration.
+- Remove duplicate, invalidated, or superseded docs with no historical value after migration.
+- Move obsolete documents that retain historical research value to `docs/archive/`, update the archive catalog, and confirm current docs no longer treat archived content as authority.
+- Revalidate every existing `DECISIONS.md`, `TECH_DEBT.md`, and `BACKLOG.md` entry; delete entries that are no longer active or binding.
 - Update stale links in the root `README.md` if needed.
 - Remove `/tmp/agentic-docs-templates` if cloned.
 
@@ -264,6 +273,7 @@ Verify these files exist:
 - `ARCHITECTURE.md`
 - `docs/STATE.md`
 - `docs/DEPLOYMENT.md`
+- `docs/archive/README.md`
 - `docs/TESTING.md`
 - `docs/DECISIONS.md`
 - `docs/TECH_DEBT.md`
@@ -286,7 +296,17 @@ grep -r "CUSTOMIZE" --include="*.md" .
 
 For a bootstrapped project, zero results should remain except in intentionally retained template documentation.
 
-### 4.3 Documentation Integrity
+### 4.3 Governance Constraints
+
+Check manually:
+
+- `STATE.md` / `knowledge-base.md` entries meet the five-line budget and do not repeat Design Doc / Exec Plan details
+- `DECISIONS.md` entries meet the 15-line budget and retain only still-binding constraints
+- `TECH_DEBT.md` / `BACKLOG.md` contain no completed tables, stale entries, or active-plan duplicates
+- Durable documents do not track specific migration application state
+- `archive/` documents are not treated as authority by current docs
+
+### 4.4 Documentation Integrity
 
 Run:
 
@@ -296,11 +316,11 @@ python3 scripts/check-docs.py
 
 Fix reported issues.
 
-### 4.4 Present Summary
+### 4.5 Present Summary
 
 List generated/modified/deleted files and one-line content summaries. Also list unknowns the user still needs to fill.
 
-### 4.5 Next Steps
+### 4.6 Next Steps
 
 - Claude Code users: copy/symlink `AGENTS.md` to `CLAUDE.md` if the tool does not read `AGENTS.md`.
 - Cursor users: copy relevant rules into `.cursorrules` or project settings if needed.
@@ -313,7 +333,7 @@ List generated/modified/deleted files and one-line content summaries. Also list 
 ## Important Reminders
 
 - Be honest, not optimistic. If there are no tests or unclear architecture, say so.
-- Current-state docs are not changelogs.
-- `TECH_DEBT.md` is for implementation deviations; `BACKLOG.md` is for product/deferred/ops follow-ups.
-- Do not fabricate alternatives or issues to fill a report.
-- Preserve existing project-specific rules, but avoid preserving obsolete docs as competing sources of truth.
+- Current-state and product-knowledge docs are budgeted snapshots, not changelogs or Design Doc copies.
+- `TECH_DEBT.md` tracks implementation deviations with repayment paths; `BACKLOG.md` tracks product/deferred/ops follow-ups with explicit value or restart conditions. Both are active queues, not historical ledgers.
+- Do not fabricate alternatives, issues, technical debt, or backlog entries to fill a report.
+- Preserve existing project-specific rules, but do not preserve obsolete docs as competing sources of truth; archived content exists only for historical research.

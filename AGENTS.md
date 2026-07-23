@@ -36,10 +36,11 @@ Your reader is a senior engineer with full context on the project. They do not n
 5. **Tests first.** When working on core business logic, write tests first, confirm they fail, then implement.
 6. **No "minimal runnable loop" feature delivery.** For real feature work, implement the final user-facing path. Do not deliver scaffolding, mock backends, placeholders, or dual-path transition code unless the user explicitly asks for a prototype/spike/placeholder.
 7. **No "minimum viable / shortest path" solutions.** The proposal must target the complete form of the goal. If you catch yourself trimming requirements for convenience, stop and return to the complete proposal.
-8. **No mid-flight checks during Exec Plan execution.** During Exec Plan execution, do not use phase-by-phase lint/test/typecheck/build as acceptance gates. Acceptance happens once after the whole plan is implemented.
+8. **No mid-flight checks during Exec Plan execution.** During Exec Plan execution, do not use phase-by-phase lint/test/typecheck/build as acceptance gates. Acceptance happens once after the whole plan is implemented. The project's full CI command, as defined under Common Commands, is expensive and must run only once per task at final delivery state; use targeted tests or single-module checks for development feedback.
 9. **No code written only to pass checks.** Do not add placeholder implementations, empty branches, `@ts-ignore`, `eslint-disable`, generic catch-all wrappers, or coverage-only tests to make checks pass. Fix the design instead.
 10. **No silent decisions.** Any Design Doc, Exec Plan, or non-trivial change proposal must contain a `## Decisions Made Without Asking` section listing: (a) decisions made without asking the user; (b) whether the choice was made because it is the right abstraction or merely the smallest change. If the reason is smallest change / convenience, stop and ask. Enumerate decisions themselves; do not fabricate alternatives just to fill a comparison table.
-11. **No minimum-diff thinking.** Before implementing, answer: "is this the smallest-diff approach, or the right-abstraction approach?" If they differ, choose the right abstraction and explain why the smallest diff is wrong.
+11. **No unrequested actions.** Do only what the user explicitly requested. Do not opportunistically modify, clean up, or expand scope beyond the request; report issues discovered along the way without acting on them. Suggestions must not be implemented without explicit user approval. If the user says stop, stop immediately without cleanup actions.
+12. **No minimum-diff thinking.** Before implementing, answer: "is this the smallest-diff approach, or the right-abstraction approach?" If they differ, choose the right abstraction and explain why the smallest diff is wrong.
 
 > Violating any of the above = failure. Better to ask one more question than to skip documentation.
 
@@ -72,6 +73,10 @@ Your reader is a senior engineer with full context on the project. They do not n
 - **[docs/TECH_DEBT.md](docs/TECH_DEBT.md)** — Technical debt: implementation deviations from the known-correct shape
 - **[docs/BACKLOG.md](docs/BACKLOG.md)** — Product gaps, deferred decisions, and operational/security follow-ups
 
+### Archive
+
+- **[docs/archive/](docs/archive/README.md)** — Documents that have completed their purpose; read-only and never authoritative for current work
+
 ### Document Templates
 
 - **[docs/templates/exec-plan.md](docs/templates/exec-plan.md)** — Must use this template when creating new execution plans
@@ -93,7 +98,7 @@ Your reader is a senior engineer with full context on the project. They do not n
 
 # Code Quality
 # <your lint/format command>
-# <your ci command>
+# <your full CI command>  # Expensive; run once at final delivery state
 
 # Testing
 # <your test commands>
@@ -160,12 +165,19 @@ For no-doc tasks, reference the issue/PR/conversation plan if your test framewor
 | **New execution plan** | Create a doc in `docs/exec-plans/active/` using [exec-plan.md](docs/templates/exec-plan.md), update [exec-plans/index.md](docs/exec-plans/index.md) |
 | **New tech debt discovered** | [TECH_DEBT.md](docs/TECH_DEBT.md), after applying the admission criteria in that file |
 | **New product gap / deferred decision / operational follow-up discovered** | [BACKLOG.md](docs/BACKLOG.md), after applying the admission criteria in that file |
+| **Document has completed its purpose but retains historical value** | Move it to [archive/](docs/archive/README.md) and record its original location and archive reason; delete it if it has no historical value |
 
-**STATE.md update rule:** `STATE.md` is a current-state snapshot. Update the affected section in place. Do not append changelog entries, plan-by-plan history, or progress logs.
+**`STATE.md` / `knowledge-base.md` hard budget:** These files are current snapshots organized by domain and feature, respectively. Rewrite the entire affected entry in place when facts change; never append process detail to an old entry. Each entry must be no more than five lines (roughly 300 words) and contain only the conclusion plus links to the authoritative Design Doc, Exec Plan, or source entry point. Push excess detail into the authoritative document instead of expanding the snapshot. Dates, revision history, implementation process, and changelog language such as "superseded" or "pending application" are forbidden.
+
+**`DECISIONS.md` hard budget:** Each decision must be no more than 15 lines and contain only the still-binding choice, rationale, trade-off, and link. Delete a decision when it expires, is superseded, or no longer constrains future work. Move it to `docs/archive/` only when it retains historical research value.
+
+**`TECH_DEBT.md` / `BACKLOG.md` lifecycle:** When changing a related domain or syncing docs, revalidate affected existing entries instead of only appending new rows. Delete entries that have been repaid, started, abandoned, invalidated, or superseded by a new design. History belongs in git, Design Docs, and completed Exec Plans. Never maintain resolved/completed tables or duplicate work tracked by an active Exec Plan.
+
+**Migration state rule:** Durable documents must not track whether a specific migration is pending or applied. Transient execution state belongs in the deployment system or an active Exec Plan; durable docs record only the current schema facts, deployment mechanism, and still-binding constraints.
 
 **Cross-reference rule:** When updating any document, check whether related documents also need syncing. Documents are never updated in isolation.
 
-**Index maintenance:** After adding or moving any doc under `docs/`, update the corresponding `index.md`.
+**Index and archive maintenance:** After adding or moving a Design Doc or Exec Plan under `docs/`, update the corresponding `index.md`. Move other documents that have completed their purpose but retain historical value to `docs/archive/`; archive documents are read-only and must not serve as authority for new work.
 
 **When to create a Design Doc — default: do not create one.** Create a Design Doc only when both conditions are true:
 
@@ -203,7 +215,7 @@ A change touching many files is not by itself an Exec Plan trigger if the work c
 | "I already know how it works" | Verify with evidence |
 | "TDD is too heavy for this fix" | Simple code breaks too |
 | "I will update docs later" | Later does not happen; update docs now |
-| "Just change these two lines" | This is minimum-diff thinking; check the abstraction first |
+| "Just change these two lines" | This is minimum-diff thinking (Rule #12); check the abstraction first |
 | "This decision is not important" | Importance is the user's call; list the decision for review |
 
 ### Pre-delivery Self-review (Mandatory)
@@ -243,7 +255,10 @@ After code is written and CI passes, show the checklist results to the user.
 - [ ] If deployment/infrastructure changed, `DEPLOYMENT.md`, `STATE.md`, and `ARCHITECTURE.md` were checked
 - [ ] Decisions meeting `DECISIONS.md` admission criteria were recorded
 - [ ] New tech debt and backlog items were triaged into `TECH_DEBT.md` vs `BACKLOG.md`
-- [ ] Cross-references between updated docs were verified
+- [ ] Affected existing decisions, tech debt, and backlog entries were revalidated; repaid, started, abandoned, invalidated, or superseded entries were removed
+- [ ] `STATE.md` / `knowledge-base.md` entries meet the five-line budget, and `DECISIONS.md` entries meet the 15-line budget
+- [ ] Durable documents do not track specific migration application state
+- [ ] Cross-references between updated docs were verified, and archived documents were not treated as current authority
 - [ ] Evidence: list each updated doc and a one-line summary
 
 ### Task Completion Criteria
