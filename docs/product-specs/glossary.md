@@ -1,8 +1,6 @@
 # Glossary
 
 > Canonical terms used across this project. All agents (coding, review, etc.) should use these terms consistently.
->
-> **Last updated**: YYYY-MM-DD
 
 ---
 

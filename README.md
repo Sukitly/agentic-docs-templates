@@ -2,7 +2,7 @@
 
 A language-agnostic, framework-agnostic repository template for document-driven AI coding agent development.
 
-AI coding agents are powerful but undisciplined by default. This template gives agents a durable context system: read docs before changing code, plan before executing, write tests before implementation, keep documentation synchronized, and use admission, budget, deletion, and archive rules to prevent state snapshots, decision logs, technical debt, and backlogs from becoming dumping grounds.
+AI coding agents are powerful but undisciplined by default. This template gives agents a durable context system: read docs before changing code, plan before executing, write tests before implementation, keep documentation synchronized, and use single fact ownership plus admission, budget, freeze, deletion, and archive rules to prevent state snapshots, decision logs, technical debt, and backlogs from decaying into changelogs.
 
 ## Table of Contents
 
@@ -49,7 +49,7 @@ The bootstrap prompt works with any AI coding agent. It analyzes the project, co
 ├── ARCHITECTURE.md                # Architecture map (customize per project)
 ├── bootstrap.md                   # Bootstrap prompt for existing projects
 ├── docs/
-│   ├── STATE.md                   # Current-state snapshot (no changelog)
+│   ├── STATE.md                   # Runtime and infrastructure state, known limitations (no changelog)
 │   ├── DECISIONS.md               # Still-binding technical decisions
 │   ├── DEPLOYMENT.md              # Deploy targets, env, smoke tests, rollback notes
 │   ├── TESTING.md                 # Testing strategy
@@ -58,7 +58,7 @@ The bootstrap prompt works with any AI coding agent. It analyzes the project, co
 │   ├── archive/
 │   │   └── README.md              # Read-only archive boundary and catalog
 │   ├── product-specs/
-│   │   ├── knowledge-base.md      # Feature descriptions, file paths, data model
+│   │   ├── knowledge-base.md      # User-visible capabilities, file paths, data model
 │   │   └── glossary.md            # Canonical terms and definitions
 │   ├── design-docs/
 │   │   └── index.md               # Design document index
@@ -84,18 +84,19 @@ The bootstrap prompt works with any AI coding agent. It analyzes the project, co
 3. **Plan before execute.** Present planned file changes and wait for explicit approval.
 4. **Tests first for core logic.** Use TDD for behavior that matters.
 5. **Self-review and sync docs.** A task is not complete until checks pass and affected docs are updated.
-6. **Documentation is a budgeted current-state system.** Rewrite snapshots in place, delete stale queue entries, and physically separate history from current authority.
+6. **Every fact has one owning document.** A PR changes only entries whose facts changed; snapshots are budgeted, Implemented Design Docs are frozen, stale queue entries are deleted, and history is physically separated from current authority.
 7. **No minimum-diff shortcuts.** Choose the right abstraction over the smallest patch.
 8. **No silent decisions.** Non-trivial choices must be explicit; do not fabricate alternatives just to fill a table.
 9. **No unrequested actions.** Report out-of-scope findings instead of modifying them opportunistically.
+10. **No ledger writes without approval.** New `TECH_DEBT.md` / `BACKLOG.md` entries are reported to the user and written only after approval.
 
 ### Document Types
 
 | Type | When to Create | Location |
 |---|---|---|
-| Current-state snapshot | Always present; stores current conclusions by domain | `docs/STATE.md` |
-| Product knowledge snapshot | Always present; stores current behavior and entry points by feature | `docs/product-specs/knowledge-base.md` |
-| Design Doc | Significant architecture/product design change with real competing approaches | `docs/templates/design-doc.md` |
+| Runtime state snapshot | Always present; runtime, infrastructure, and known limitations | `docs/STATE.md` |
+| Product knowledge snapshot | Always present; the sole owner of user-visible capabilities | `docs/product-specs/knowledge-base.md` |
+| Design Doc | Significant architecture/product design change with real competing approaches; frozen once the implementation merges | `docs/templates/design-doc.md` |
 | Exec Plan | Cross-package/service cutover, irreversible migration, or multi-PR/multi-session work | `docs/templates/exec-plan.md` |
 | Decision Log | Still-binding cross-cutting decision without a carrying doc | `docs/DECISIONS.md` |
 | Tech Debt | Implementation deviation with evidence, engineering impact, and a repayment path | `docs/TECH_DEBT.md` |
@@ -104,9 +105,11 @@ The bootstrap prompt works with any AI coding agent. It analyzes the project, co
 
 ### Documentation Freshness Boundaries
 
-- `STATE.md` and `knowledge-base.md` entries are no more than five lines (roughly 300 words) and contain only current conclusions and authoritative links; push excess detail into a Design Doc or Exec Plan.
-- `DECISIONS.md` entries are no more than 15 lines and retain only decisions that still constrain future work.
-- `TECH_DEBT.md` and `BACKLOG.md` are active queues, not historical ledgers. Delete entries when repaid, started, abandoned, invalidated, or superseded; do not maintain completed tables or duplicate active Exec Plan tracking.
+- Every fact has one owning document; other documents only link to it. A document whose facts a PR did not change is not touched. Documents carry no `Last updated` dates; history belongs in git.
+- `STATE.md` holds only runtime and infrastructure; `knowledge-base.md` holds only user-visible capabilities. Entries are no more than five lines (roughly 300 words); interaction details and implementation parameters belong in code.
+- The Design Doc lifecycle is `Draft → In progress → Implemented`; a doc is frozen once its implementation merges, overturning it means writing a new carrier and updating only the old doc's `Superseded` line, and the body is verified by fingerprint.
+- `DECISIONS.md` entries are no more than 15 lines, retain only decisions that still constrain future work, and are not edited after writing.
+- `TECH_DEBT.md` and `BACKLOG.md` are active queues, not historical ledgers; they admit only items with no other carrier, and writing requires user approval. Delete entries when repaid, started, abandoned, invalidated, or superseded; do not maintain completed tables or duplicate active Exec Plan tracking.
 - Durable documents do not track whether a specific migration is pending or applied; transient state belongs in the deployment system or an active Exec Plan.
 - `archive/` is read-only and not current authority; delete obsolete content with no historical value.
 
@@ -134,7 +137,7 @@ python3 scripts/check-docs.py
 uv run scripts/check-docs.py
 ```
 
-The script checks relative Markdown links, index coverage, Exec Plan structure, and `ARCHITECTURE.md` path references. It has no external dependencies beyond Python 3.
+The script checks relative Markdown links, index coverage, Exec Plan structure, Implemented Design Doc body fingerprints and index status consistency, and `ARCHITECTURE.md` path references. It has no external dependencies beyond Python 3.
 
 ## Customization
 
@@ -142,7 +145,7 @@ Search for `<!-- CUSTOMIZE -->` comments across Markdown files:
 
 - `AGENTS.md`: commands, tech stack, coding rules, testing rules
 - `ARCHITECTURE.md`: directory structure, layering rules, conventions
-- `docs/STATE.md`: deployment/runtime, infrastructure, current domain state
+- `docs/STATE.md`: deployment/runtime, infrastructure, known limitations
 - `docs/DEPLOYMENT.md`: deploy targets, env vars, smoke tests, rollback notes
 - `docs/TESTING.md`: test categories, directories, commands, coverage goals
 - `docs/product-specs/knowledge-base.md`: features, data model, file paths

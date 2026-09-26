@@ -2,8 +2,6 @@
 
 > The agent checks here to understand active and completed execution plans.
 >
-> **Last updated**: 2026-06-18
->
 > Keep this index synchronized with files under `active/` and `completed/`. This repository template should not ship with any active or completed plans.
 
 ---
@@ -18,6 +16,8 @@
 ---
 
 ## Active Plans
+
+"Summary" states only the goal; progress lives only inside the plan, and this index changes only when a plan is created or completed.
 
 | ID | Plan | Status | Summary |
 |---|---|---|---|

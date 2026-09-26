@@ -1,8 +1,12 @@
 # Technical Debt
 
-> **Last updated**: 2026-07-23
->
 > This file tracks only implementation deviations from the known-correct shape that have a concrete repayment path. It is not a product backlog.
+>
+> ### Write Prerequisite
+>
+> **Get explicit user approval before writing any entry** (`AGENTS.md` Hard Rule #13). Deleting repaid or invalidated entries needs no approval.
+>
+> **Reverse criterion: if nobody plans to fix it, or the fix cannot be described, it is not debt; it is the current state.**
 >
 > ### Admission Criteria
 >

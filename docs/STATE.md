@@ -1,16 +1,15 @@
 # Application State
 
-> **Last updated**: 2026-07-23
->
-> This document is the application's current-state snapshot organized by domain. Keep only current facts, not history or change process.
+> This document answers one question: **what the runtime and infrastructure are now, and which constraints still hold.** Product capabilities belong in [knowledge-base.md](product-specs/knowledge-base.md), and test strategy and quality gates belong in [TESTING.md](TESTING.md); do not restate them here.
 >
 > ### Update Rules (Hard Constraints)
 >
-> - Rewrite the affected entry in place when state changes; never append to an old entry
+> - Reverse criterion: **if a line describes a decision or proposal rather than the current state, it belongs in a Design Doc**; only what still makes sense after deleting that Design Doc is state
+> - Reverse criterion: **if a line describes what users can do, it belongs in the knowledge base**; change this file only when a resource, binding, deployment topology, or known limitation changes
+> - Change only entries whose facts changed, and only the part that changed; never append to an old entry
 > - Each entry contains only the current conclusion plus an authoritative Design Doc, Exec Plan, or source entry point, and is no more than five lines (roughly 300 words)
 > - Push excess detail into the authoritative document instead of repeating implementation details here
 > - Do not include dates, revision history, plan-by-plan completion notes, migration identifiers, or transient states such as "pending" or "applied"
-> - Keep `Last updated` as a date only; history belongs in git, Design Docs, Exec Plans, and `DECISIONS.md`
 
 ---
 
@@ -34,17 +33,6 @@
 | Auth | [Provider] | [Purpose] | [Current state] |
 | Storage | [Provider] | [Purpose] | [Current state] |
 | Observability | [Provider] | [Purpose] | [Current state] |
-
-## Domain State
-
-### [Domain / Module]
-
-- [Current fact with pointer to the authoritative Design Doc / Exec Plan if applicable]
-
-## Testing & CI
-
-- [Current test strategy summary. Link to `TESTING.md` for details.]
-- [Current CI/quality gate state.]
 
 ## Current Work
 

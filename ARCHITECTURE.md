@@ -2,8 +2,6 @@
 
 > This document is the architecture map of the codebase.
 > The agent should understand module structure and dependency rules here before diving into specific code.
->
-> **Last updated**: YYYY-MM-DD
 
 ---
 

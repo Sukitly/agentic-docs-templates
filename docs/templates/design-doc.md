@@ -1,9 +1,11 @@
 # [Design Document Title]
 
 > **Created**: YYYY-MM-DD
-> **Last updated**: YYYY-MM-DD
-> **Status**: Draft | Adopted | Deprecated
+> **Status**: Draft | In progress | Implemented | Deferred
+> **Superseded**: (none)
 > **Impact scope**: [Affected modules/domains]
+>
+> Once the implementation merges, set `Implemented` and add the `> **Body fingerprint**: …` line reported by `python3 scripts/check-docs.py`; the body is then frozen and only the `Status` and `Superseded` lines change, formatted `§x → carrier`. See the Design Doc lifecycle in `AGENTS.md`.
 
 ---
 
