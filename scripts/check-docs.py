@@ -6,9 +6,11 @@ Checks:
 1. All relative markdown links in docs/, ARCHITECTURE.md, AGENTS.md point to existing files
 2. exec-plans/index.md and design-docs/index.md cover all files in their directories
 3. Exec plan structure validation (required frontmatter fields and sections)
-4. ARCHITECTURE.md references existing paths
+4. Design doc lifecycle: implemented docs keep their body fingerprint; index status matches each doc
+5. ARCHITECTURE.md references existing paths
 """
 
+import hashlib
 import re
 import sys
 from pathlib import Path
@@ -117,7 +119,7 @@ check_index_covers_dir("docs/design-docs/index.md", "docs/design-docs", "design-
 
 print("📐 Checking exec-plan structure...")
 
-REQUIRED_FRONTMATTER = ["Created", "Last updated", "Status"]
+REQUIRED_FRONTMATTER = ["Created", "Status"]
 REQUIRED_FRONTMATTER_ACTIVE = ["Priority"]
 REQUIRED_SECTIONS_ACTIVE = ["## Progress Log", "## Decision Log"]
 
@@ -147,7 +149,77 @@ for dir_name in ["docs/exec-plans/active", "docs/exec-plans/completed"]:
                     errors.append(f'{file_name}: missing required section "{section}"')
 
 
-# ── Check 4: ARCHITECTURE.md path references ────────────────────────
+# ── Check 4: Design doc lifecycle ───────────────────────────────────
+
+print("🧊 Checking design-doc lifecycle...")
+
+# An implemented design doc is a frozen record: overturning it means writing a
+# new carrier and updating its status / superseded lines, never rewriting the
+# body. The fingerprint turns an accidental body edit into a failing check;
+# editing body and fingerprint together is still possible, but then it is a
+# deliberate, reviewable act rather than a drive-by.
+DESIGN_STATUSES = ("Draft", "In progress", "Implemented", "Deferred", "Current")
+MUTABLE_HEADER = re.compile(r"^> \*\*(Status|Superseded|Body fingerprint)\*\*:")
+
+
+def leading_status(text: str) -> str | None:
+    text = text.strip()
+    return next((status for status in DESIGN_STATUSES if text.startswith(status)), None)
+
+
+def body_fingerprint(content: str) -> str:
+    lines = content.replace("\r\n", "\n").split("\n")
+    body = "\n".join(line for line in lines if not MUTABLE_HEADER.match(line))
+    return hashlib.sha256(body.encode("utf-8")).hexdigest()[:16]
+
+
+design_dir = ROOT / "docs/design-docs"
+design_index = design_dir / "index.md"
+if design_index.exists():
+    index_statuses: dict[str, str] = {}
+    for row in design_index.read_text(encoding="utf-8").split("\n"):
+        cells = [cell.strip() for cell in row.split("|")]
+        if len(cells) < 5:
+            continue
+        file_match = re.search(r"\(([^)]+\.md)\)", cells[2])
+        status = leading_status(cells[4])
+        if file_match and status:
+            index_statuses[file_match.group(1)] = status
+
+    for f in sorted(design_dir.glob("*.md")):
+        if f.name == "index.md":
+            continue
+        content = f.read_text(encoding="utf-8")
+        status_match = re.search(r"^> \*\*Status\*\*:(.*)$", content, flags=re.M)
+        status = leading_status(status_match.group(1)) if status_match else None
+        if not status:
+            errors.append(
+                f'{relative(f)}: missing "> **Status**:" line with one of {" / ".join(DESIGN_STATUSES)}'
+            )
+            continue
+
+        indexed = index_statuses.get(f.name)
+        if indexed and indexed != status:
+            errors.append(
+                f'{relative(f)}: status "{status}" but {relative(design_index)} says "{indexed}"'
+            )
+
+        if status != "Implemented":
+            continue
+        actual = body_fingerprint(content)
+        recorded = re.search(r"^> \*\*Body fingerprint\*\*: ([0-9a-f]+)\s*$", content, flags=re.M)
+        if not recorded:
+            errors.append(
+                f'{relative(f)}: implemented design doc lacks a fingerprint; add "> **Body fingerprint**: {actual}"'
+            )
+        elif recorded.group(1) != actual:
+            errors.append(
+                f"{relative(f)}: body of an implemented design doc changed; supersede it instead of editing "
+                f"(recorded {recorded.group(1)}, actual {actual})"
+            )
+
+
+# ── Check 5: ARCHITECTURE.md path references ────────────────────────
 
 print("🏗️  Checking ARCHITECTURE.md path references...")
 

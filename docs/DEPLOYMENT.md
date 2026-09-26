@@ -1,7 +1,5 @@
 # Deployment
 
-> **Last updated**: 2026-06-18
->
 > Document deploy targets, runtime configuration, smoke tests, and rollback notes. Keep this file current-state only; do not append deployment history.
 
 ---

@@ -1,13 +1,12 @@
 # Knowledge Base
 
-> A feature-organized snapshot of core behavior, key file paths, and the data model.
-> The agent uses this to understand what the product does and where things live.
->
-> **Last updated**: YYYY-MM-DD
+> A feature-organized snapshot of what users can and cannot do now, plus authoritative docs, key file paths, and the data model.
+> The agent uses this to understand what the product does and where things live. This file is the sole owner of product capabilities; `STATE.md` and Design Docs do not restate its content.
 >
 > ### Update Rules (Hard Constraints)
 >
-> - Rewrite the affected feature entry in place; never append implementation process to an old entry
+> - Rewrite an entry only when a capability it states is added, removed, or changed, and change only the part that changed; never append implementation process to an old entry
+> - Admission criteria: do not record anything whose implementation could change without changing user-visible behavior, interaction micro-details (icons, animation durations, tooltip copy, zoom ratios, styling), or implementation parameters (timeouts, retries, refresh intervals, page sizes); these belong in code and tests
 > - Each feature entry contains only its purpose/current behavior, authoritative document, key paths, and known gaps, and is no more than five lines (roughly 300 words)
 > - Push excess detail into a Design Doc or Exec Plan instead of copying proposal text here
 > - Do not include dates, revision history, plan-by-plan history, migration identifiers, or transient states such as "pending" or "applied"

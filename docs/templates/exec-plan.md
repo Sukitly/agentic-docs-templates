@@ -1,7 +1,6 @@
 # [Plan Title]
 
 > **Created**: YYYY-MM-DD
-> **Last updated**: YYYY-MM-DD
 > **Status**: 📋 Proposal | ⏳ Pending | 🔄 In Progress | ✅ Completed
 > **Priority**: High | Medium | Low
 > **Goal**: [One-sentence goal description]
@@ -59,16 +58,16 @@
 
 ## Docs Impact
 
-> Must fill on plan creation. Use the Doc Sync Matrix in `AGENTS.md` to identify affected docs.
+> Must fill on plan creation. Use Fact Ownership and the Doc Sync Matrix in `AGENTS.md` to identify affected docs; list only docs whose facts this plan really changes.
 > On plan completion, every row must be checked off — unchecked items mean the plan is not complete.
 > If this plan originates from a `TECH_DEBT.md` or `BACKLOG.md` entry, remove that entry from its source queue immediately when creating the plan and record the removal below; do not wait for plan completion or duplicate tracking.
 
 | Document | What to update | Updated? |
 |---|---|---|
-| `docs/STATE.md` | <!-- e.g., Add Feature X to current feature state --> | ☐ |
+| `docs/STATE.md` | <!-- Only runtime / infrastructure / known-limitation changes, e.g., add a storage bucket binding --> | ☐ |
 | `ARCHITECTURE.md` | <!-- e.g., Add module Y to layering map --> | ☐ |
 | `docs/DECISIONS.md` | <!-- Only if a decision meets the file's admission criteria --> | ☐ |
-| `docs/product-specs/knowledge-base.md` | <!-- e.g., Add feature description --> | ☐ |
+| `docs/product-specs/knowledge-base.md` | <!-- User-visible capability changes, e.g., add an "export report" feature entry --> | ☐ |
 | `docs/DEPLOYMENT.md` | <!-- e.g., Add new deploy target / env / smoke test --> | ☐ |
 | `docs/exec-plans/index.md` | Move this plan to completed | ☐ |
 <!-- Remove rows that do not apply. Add rows for any other affected docs. If the plan originates from TECH_DEBT or BACKLOG, add the corresponding queue-removal record. -->
@@ -87,6 +86,8 @@
 
 - [ ] Update all docs listed in the Docs Impact table above
 - [ ] Verify cross-references between updated docs are consistent
+- [ ] Documents and entries whose facts did not change were left untouched
+- [ ] The corresponding Design Doc was marked `Implemented` with its `Body fingerprint` when the implementation merged
 - [ ] Record any decisions that meet `docs/DECISIONS.md` admission criteria
 - [ ] Move this plan from `docs/exec-plans/active/` to `docs/exec-plans/completed/`
 - [ ] Update `docs/exec-plans/index.md`

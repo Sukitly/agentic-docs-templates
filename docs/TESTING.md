@@ -1,8 +1,6 @@
 # Testing Strategy
 
 > Define how this project ensures correctness and quality through testing.
->
-> **Last updated**: YYYY-MM-DD
 
 ---
 

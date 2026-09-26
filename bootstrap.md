@@ -1,6 +1,6 @@
 # Bootstrap: Set Up Agentic Docs for an Existing Project
 
-> **Version**: 2.2.0
+> **Version**: 2.3.0
 > **This file is an AI agent prompt.** Do not read it as documentation.
 > Copy the content below to your AI coding agent or instruct the agent to read this file directly.
 
@@ -157,11 +157,12 @@ Classify and migrate docs:
 | Existing doc type | Destination |
 |---|---|
 | Architecture/system design | `ARCHITECTURE.md` |
-| Current state/status/deployment facts | `docs/STATE.md` and `docs/DEPLOYMENT.md` |
-| Feature specs, PRDs, data model docs | `docs/product-specs/knowledge-base.md` |
+| Runtime/infrastructure state, known limitations | `docs/STATE.md` |
+| Deployment operations, environment configuration, smoke tests, rollback | `docs/DEPLOYMENT.md` |
+| Feature specs, PRDs, user-visible capabilities, data model docs | `docs/product-specs/knowledge-base.md` |
 | Glossary/terminology | `docs/product-specs/glossary.md` |
 | Testing docs | `docs/TESTING.md` |
-| ADRs/RFCs/technical proposals | `docs/design-docs/` and `docs/design-docs/index.md` |
+| ADRs/RFCs/technical proposals | `docs/design-docs/` and `docs/design-docs/index.md`; mark shipped ones `Implemented` with a `Body fingerprint`, and unshipped ones `Draft` or `Deferred` |
 | Multi-step implementation plans | `docs/exec-plans/active/` or `docs/exec-plans/completed/` and `docs/exec-plans/index.md` |
 | Technical debt with repayment path | `docs/TECH_DEBT.md` |
 | Product gaps/deferred decisions/ops follow-ups | `docs/BACKLOG.md` |
@@ -180,11 +181,11 @@ Do not modify or delete the root `README.md` unless it contains stale links to m
 4. If a section does not apply, write `N/A — [brief reason]`.
 5. Omit commands that do not exist instead of writing placeholders.
 6. Keep docs concise and factual.
-7. Rewrite `STATE.md` and `knowledge-base.md` entries in place by domain/feature. Each entry is no more than five lines (roughly 300 words) and retains only the current conclusion, authoritative document, and key paths.
+7. Write each fact into exactly one owning document (Fact Ownership in `AGENTS.md`); other documents only link to it. `STATE.md` holds only runtime, infrastructure, and known limitations; `knowledge-base.md` holds only user-visible capabilities, without interaction micro-details or implementation parameters. Each entry is no more than five lines (roughly 300 words) and retains only the current conclusion, authoritative document, and key paths.
 8. Keep each `DECISIONS.md` entry to no more than 15 lines and retain only decisions that still constrain future work. Delete expired decisions; archive them only when they retain historical research value.
-9. Keep only active entries in `TECH_DEBT.md` and `BACKLOG.md`. Delete entries that are repaid, started, abandoned, invalidated, or superseded; do not create completed tables or duplicate active Exec Plan tracking.
+9. Keep only active entries with no other carrier in `TECH_DEBT.md` and `BACKLOG.md`, and confirm migrated entries with the user in Phase 2. Delete entries that are repaid, started, abandoned, invalidated, or superseded; do not create completed tables or duplicate active Exec Plan tracking.
 10. Durable documents do not track whether a specific migration is pending or applied; transient execution state belongs in the deployment system or an active Exec Plan.
-11. Use today's date for `Last updated` fields.
+11. Documents carry no `Last updated` dates; history belongs in git.
 12. Use real paths in `ARCHITECTURE.md` and `knowledge-base.md`; every backtick-quoted path that looks local should exist.
 
 ### 3.4 Required Structure
@@ -222,7 +223,7 @@ If `active/`, `completed/`, or `references/` is empty, add `.gitkeep`. `archive/
 |---|---|
 | `AGENTS.md` | Commands, tech stack, coding rules, testing rules, project-specific agent rules |
 | `ARCHITECTURE.md` | Architecture map, directory responsibilities, layering rules, cross-cutting concerns |
-| `docs/STATE.md` | Current state by domain, deployment/runtime summary, infrastructure, limitations |
+| `docs/STATE.md` | Deployment/runtime summary, infrastructure, known limitations; no product capabilities |
 | `docs/DEPLOYMENT.md` | Deploy targets, env/secrets, smoke tests, rollback notes |
 | `docs/TESTING.md` | Test categories, layout, commands, guidelines, coverage/quality gates |
 | `docs/product-specs/knowledge-base.md` | Features, key files, data model, user-visible behavior |
@@ -230,7 +231,7 @@ If `active/`, `completed/`, or `references/` is empty, add `.gitkeep`. `archive/
 | `docs/DECISIONS.md` | Existing still-binding decisions; remove expired/superseded entries and archive historical snapshots only when needed |
 | `docs/TECH_DEBT.md` | Real implementation deviations with evidence, engineering impact, and repayment paths; active entries only |
 | `docs/BACKLOG.md` | Product gaps, deferred decisions, and ops/security follow-ups with explicit value or restart conditions; active entries only |
-| `docs/design-docs/index.md` | Existing design docs/RFCs/ADRs migrated into `docs/design-docs/` |
+| `docs/design-docs/index.md` | Existing design docs/RFCs/ADRs migrated into `docs/design-docs/`, with their lifecycle status |
 | `docs/exec-plans/index.md` | Existing active/completed plans migrated into `docs/exec-plans/` |
 
 ### 3.6 Design Doc / Exec Plan Criteria
@@ -300,6 +301,7 @@ For a bootstrapped project, zero results should remain except in intentionally r
 
 Check manually:
 
+- No fact appears in two documents; `STATE.md` contains no product capabilities
 - `STATE.md` / `knowledge-base.md` entries meet the five-line budget and do not repeat Design Doc / Exec Plan details
 - `DECISIONS.md` entries meet the 15-line budget and retain only still-binding constraints
 - `TECH_DEBT.md` / `BACKLOG.md` contain no completed tables, stale entries, or active-plan duplicates
@@ -333,7 +335,7 @@ List generated/modified/deleted files and one-line content summaries. Also list 
 ## Important Reminders
 
 - Be honest, not optimistic. If there are no tests or unclear architecture, say so.
-- Current-state and product-knowledge docs are budgeted snapshots, not changelogs or Design Doc copies.
+- Runtime-state and product-knowledge docs are budgeted snapshots, not changelogs or Design Doc copies; every fact has one owning document.
 - `TECH_DEBT.md` tracks implementation deviations with repayment paths; `BACKLOG.md` tracks product/deferred/ops follow-ups with explicit value or restart conditions. Both are active queues, not historical ledgers.
 - Do not fabricate alternatives, issues, technical debt, or backlog entries to fill a report.
 - Preserve existing project-specific rules, but do not preserve obsolete docs as competing sources of truth; archived content exists only for historical research.
